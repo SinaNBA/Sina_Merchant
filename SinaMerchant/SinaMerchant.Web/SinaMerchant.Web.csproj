@@ -21,8 +21,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Data\Entities\Account\User\" />
-  </ItemGroup>
-
 </Project>

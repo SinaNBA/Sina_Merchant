@@ -1,4 +1,4 @@
-﻿namespace SinaMerchant.Web.Data.Entities.Account.User
+﻿namespace SinaMerchant.Web.Data.Entities
 {
     // site's user or customer's table
     public class siteUser

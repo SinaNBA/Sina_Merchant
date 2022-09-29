@@ -1,4 +1,4 @@
-﻿namespace SinaMerchant.Web.Entities
+﻿namespace SinaMerchant.Web.Data.Entities
 {    
     // a bridge table for ProductItem and VariationOption
     public class ProductConfig
