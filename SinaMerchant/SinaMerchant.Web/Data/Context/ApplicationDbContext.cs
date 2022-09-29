@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace SinaMerchant.Web.Context
+namespace SinaMerchant.Web
 {
     public class ApplicationDbContext : DbContext
     {
