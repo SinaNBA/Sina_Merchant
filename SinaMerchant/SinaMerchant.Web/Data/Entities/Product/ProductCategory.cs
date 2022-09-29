@@ -7,6 +7,8 @@
         public string Name { get; set; } // product category's name
 
         public ProductCategory? Parent { get; set; }
+        public ICollection<ProductCategory> Childs { get; set; }
         public ICollection<Product> Products { get; set; }
+        public ICollection<Variation> Variations { get; set; }
     }
 }
