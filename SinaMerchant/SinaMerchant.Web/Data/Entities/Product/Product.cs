@@ -7,5 +7,8 @@
         public string Name { get; set; }
         public string? Description { get; set; }
         public string? ImageName { get; set; }
+
+        public ProductCategory Category { get; set; }
+        public ICollection<ProductItem> ProductItems { get; set; }
     }
 }

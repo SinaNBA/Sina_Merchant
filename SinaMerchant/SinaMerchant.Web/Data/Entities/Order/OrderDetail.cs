@@ -10,5 +10,8 @@
         public decimal Price { get; set; }
         public int Quantity { get; set; }
 
+        public ShopOrder Order { get; set; }
+        public ProductItem ProductItem { get; set; }
+
     }
 }

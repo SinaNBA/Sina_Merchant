@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using SinaMerchant.Web.Context;
+using SinaMerchant.Web.Data.Context;
 
 var builder = WebApplication.CreateBuilder(args);
 

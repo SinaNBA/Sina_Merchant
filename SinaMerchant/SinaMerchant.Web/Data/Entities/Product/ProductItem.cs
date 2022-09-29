@@ -8,5 +8,9 @@
         public uint QtyInStock { get; set; }
         public string? ImageName { get; set; }// a gallery for a product
         public decimal Price { get; set; }
+
+        public Product Product { get; set; }
+        public ICollection<OrderDetail> OrderDetails { get; set; }
+        public ICollection<ProductConfig> ProductConfigs { get; set; }
     }
 }
