@@ -1,17 +1,26 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SinaMerchant.Web.Data.Context;
+using SinaMerchant.Web.Data.Entities;
+using SinaMerchant.Web.Data;
+using SinaMerchant.Web.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// Add DbContext service
+// Config DbContext
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+// Add Repos to the DI container
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped(typeof(IRepository<>), typeof(ShopRepository<>));
+//builder.Services.AddScoped<IRepository<SiteUser>, ShopRepository<SiteUser>>();
+//builder.Services.AddScoped<IRepository<ProductCategory>, ShopRepository<ProductCategory>>();
 
 var app = builder.Build();
 
