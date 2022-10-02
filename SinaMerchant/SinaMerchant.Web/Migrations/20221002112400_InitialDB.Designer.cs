@@ -12,7 +12,7 @@ using SinaMerchant.Web.Data.Context;
 namespace SinaMerchant.Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220929191836_InitialDB")]
+    [Migration("20221002112400_InitialDB")]
     partial class InitialDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

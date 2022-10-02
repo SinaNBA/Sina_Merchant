@@ -28,27 +28,32 @@ namespace SinaMerchant.Web.Repositories
 
         public TEntity GetById(object id)
         {
-            throw new NotImplementedException();
+            return _entities.Find(id);
         }
 
-        public TEntity Filter(Expression<Func<TEntity, bool>> filterExpression)
+        public ICollection<TEntity> Filter(Expression<Func<TEntity, bool>> filterExpression)
         {
-            throw new NotImplementedException();
+
+            return _entities.Where(filterExpression).ToList();
+
         }
 
         public bool Update(TEntity entity)
         {
-            throw new NotImplementedException();
+            _entities.Update(entity);
+            return true;
         }
 
         public bool Delete(TEntity entity)
         {
-            throw new NotImplementedException();
+            _entities.Remove(entity);
+            return true;
         }
 
         public bool DeleteById(object id)
         {
-            throw new NotImplementedException();
+            var entity = GetById(id);
+            return Delete(entity);
         }
 
     }

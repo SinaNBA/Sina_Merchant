@@ -7,7 +7,7 @@ namespace SinaMerchant.Web.Repositories
         bool Insert(TEntity entity);
         ICollection<TEntity> GetAll();
         TEntity GetById(object id);
-        TEntity Filter(Expression<Func<TEntity, bool>> filterExpression);
+        ICollection<TEntity> Filter(Expression<Func<TEntity, bool>> filterExpression);
         bool Update(TEntity entity);
         bool Delete(TEntity entity);
         bool DeleteById(object id);
