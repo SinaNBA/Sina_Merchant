@@ -14,6 +14,6 @@ namespace SinaMerchant.Web.Data
         IRepository<ProductItem> ProductItemRepository { get; }
         IRepository<Variation> VariationRepository { get; }
         IRepository<VariationOption> VariationOptionRepository { get; }
-        void Save();
+        Task Save();
     }
 }

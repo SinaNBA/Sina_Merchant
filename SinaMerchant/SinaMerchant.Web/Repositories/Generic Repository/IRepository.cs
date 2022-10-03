@@ -5,12 +5,12 @@ namespace SinaMerchant.Web.Repositories
     public interface IRepository<TEntity> where TEntity : class
     {
         bool Insert(TEntity entity);
-        ICollection<TEntity> GetAll();
-        TEntity GetById(object id);
-        ICollection<TEntity> Filter(Expression<Func<TEntity, bool>> filterExpression);
+        ICollection<TEntity>? GetAll();
+        Task<TEntity> GetById(object id);
+        ICollection<TEntity>? Filter(Expression<Func<TEntity, bool>> filterExpression);
         bool Update(TEntity entity);
         bool Delete(TEntity entity);
-        bool DeleteById(object id);
+        Task<bool> DeleteById(object id);
 
 
     }

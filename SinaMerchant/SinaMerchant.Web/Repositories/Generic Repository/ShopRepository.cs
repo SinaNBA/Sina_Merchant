@@ -21,17 +21,17 @@ namespace SinaMerchant.Web.Repositories
             return true;
         }
 
-        public ICollection<TEntity> GetAll()
+        public ICollection<TEntity>? GetAll()
         {
             return _entities.ToList();
         }
 
-        public TEntity GetById(object id)
+        public async Task<TEntity> GetById(object id)
         {
-            return _entities.Find(id);
+            return await _entities.FindAsync(id);
         }
 
-        public ICollection<TEntity> Filter(Expression<Func<TEntity, bool>> filterExpression)
+        public ICollection<TEntity>? Filter(Expression<Func<TEntity, bool>> filterExpression)
         {
 
             return _entities.Where(filterExpression).ToList();
@@ -50,9 +50,9 @@ namespace SinaMerchant.Web.Repositories
             return true;
         }
 
-        public bool DeleteById(object id)
+        public async Task<bool> DeleteById(object id)
         {
-            var entity = GetById(id);
+            var entity = await GetById(id);
             return Delete(entity);
         }
 
