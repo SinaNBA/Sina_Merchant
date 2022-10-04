@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SinaMerchant.Web.Data.Entities;
+using SinaMerchant.Web.Entities;
 using System.Runtime.CompilerServices;
 
 namespace SinaMerchant.Web.Data.Context

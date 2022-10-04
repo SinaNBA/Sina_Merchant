@@ -8,25 +8,28 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Protocol.Core.Types;
 using SinaMerchant.Web.Data;
-using SinaMerchant.Web.Data.Context;
-using SinaMerchant.Web.Data.Entities;
-using SinaMerchant.Web.Repositories;
+using SinaMerchant.Web.Entities;
+using SinaMerchant.Web.Models.ViewModels;
+using SinaMerchant.Web.Services;
 
 namespace SinaMerchant.Web.Controllers
 {
     public class SiteUsersController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IGenericService<SiteUser, SiteUserViewModel> _genericService;
 
-        public SiteUsersController(IUnitOfWork unitOfWork)
+        public SiteUsersController(IUnitOfWork unitOfWork, IGenericService<SiteUser, SiteUserViewModel> genericService)
         {
             _unitOfWork = unitOfWork;
+            _genericService = genericService;
         }
+
 
         // GET: SiteUsers        
         public IActionResult Index()
         {
-            return View(_unitOfWork.SiteUserRepository.GetAll());
+            return View(_genericService.GetAll());
         }
 
         // GET: SiteUsers/Details/5        
@@ -61,7 +64,7 @@ namespace SinaMerchant.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var succes = _unitOfWork.SiteUserRepository.Insert(siteUser);
+                var succes = await _unitOfWork.SiteUserRepository.InsertAsync(siteUser);
                 ViewBag.Succes = succes;
                 await _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
@@ -101,7 +104,7 @@ namespace SinaMerchant.Web.Controllers
             {
                 try
                 {
-                    _unitOfWork.SiteUserRepository.Update(siteUser);
+                    _unitOfWork.SiteUserRepository.Edit(siteUser);
                     await _unitOfWork.Save();
                 }
                 catch (DbUpdateConcurrencyException)

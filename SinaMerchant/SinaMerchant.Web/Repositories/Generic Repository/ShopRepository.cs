@@ -15,15 +15,18 @@ namespace SinaMerchant.Web.Repositories
             _entities = _context.Set<TEntity>();
         }
 
-        public bool Insert(TEntity entity)
+        public IQueryable<TEntity> entities => _entities;
+
+        public async Task<bool> InsertAsync(TEntity entity)
         {
-            _entities.Add(entity);
+            await _entities.AddAsync(entity);
+            await Save();
             return true;
         }
 
-        public ICollection<TEntity>? GetAll()
+        public async Task<ICollection<TEntity>>? GetAll()
         {
-            return _entities.ToList();
+            return await _entities.ToListAsync();
         }
 
         public async Task<TEntity> GetById(object id)
@@ -38,23 +41,39 @@ namespace SinaMerchant.Web.Repositories
 
         }
 
-        public bool Update(TEntity entity)
+        public async Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> filterExpression)
+        {
+            return await _entities.FirstOrDefaultAsync(filterExpression);
+        }
+
+        public async Task<bool> Edit(TEntity entity)
         {
             _entities.Update(entity);
+            await Save();
             return true;
         }
 
-        public bool Delete(TEntity entity)
+        public async Task<bool> Delete(TEntity entity)
         {
             _entities.Remove(entity);
+            await Save();
             return true;
         }
 
         public async Task<bool> DeleteById(object id)
         {
             var entity = await GetById(id);
-            return Delete(entity);
+            return await Delete(entity);
         }
 
+        public async Task Save()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
     }
 }

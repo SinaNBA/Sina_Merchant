@@ -1,4 +1,4 @@
-﻿namespace SinaMerchant.Web.Data.Entities
+﻿namespace SinaMerchant.Web.Entities
 {
     // a class for the variance between products like size, color, etc
     public class Variation

@@ -2,7 +2,7 @@
 
 namespace SinaMerchant.Web.Models.ViewModels
 {
-    public class SitUserViewModel
+    public class SiteUserViewModel
     {
         public int Id { get; set; }
         [Required]

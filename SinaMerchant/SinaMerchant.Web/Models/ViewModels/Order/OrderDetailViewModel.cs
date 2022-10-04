@@ -1,5 +1,4 @@
-﻿using SinaMerchant.Web.Data.Entities;
-
+﻿
 namespace SinaMerchant.Web.Models.ViewModels
 {
     public class OrderDetailViewModel

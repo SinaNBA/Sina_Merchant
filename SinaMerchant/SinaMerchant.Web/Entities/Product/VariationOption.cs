@@ -1,4 +1,4 @@
-﻿namespace SinaMerchant.Web.Data.Entities
+﻿namespace SinaMerchant.Web.Entities
 {
     public class VariationOption
     {

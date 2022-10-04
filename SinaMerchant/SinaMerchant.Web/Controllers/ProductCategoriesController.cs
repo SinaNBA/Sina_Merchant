@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SinaMerchant.Web.Data.Context;
-using SinaMerchant.Web.Data.Entities;
+using SinaMerchant.Web.Entities;
 using SinaMerchant.Web.Repositories;
 
 namespace SinaMerchant.Web.Controllers

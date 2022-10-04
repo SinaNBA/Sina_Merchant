@@ -1,4 +1,4 @@
-﻿using SinaMerchant.Web.Data.Entities;
+﻿using SinaMerchant.Web.Entities;
 using SinaMerchant.Web.Repositories;
 
 namespace SinaMerchant.Web.Data

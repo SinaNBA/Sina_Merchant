@@ -1,4 +1,4 @@
-﻿namespace SinaMerchant.Web.Data.Entities
+﻿namespace SinaMerchant.Web.Entities
 {
     // order's detail or shopping cart
     public class OrderDetail
