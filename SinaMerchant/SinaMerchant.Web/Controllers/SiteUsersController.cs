@@ -16,20 +16,18 @@ namespace SinaMerchant.Web.Controllers
 {
     public class SiteUsersController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IGenericService<SiteUser, SiteUserViewModel> _genericService;
 
-        public SiteUsersController(IUnitOfWork unitOfWork, IGenericService<SiteUser, SiteUserViewModel> genericService)
+        public SiteUsersController(IGenericService<SiteUser, SiteUserViewModel> genericService)
         {
-            _unitOfWork = unitOfWork;
             _genericService = genericService;
         }
 
 
         // GET: SiteUsers        
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_genericService.GetAll());
+            return View(await _genericService.GetAll());
         }
 
         // GET: SiteUsers/Details/5        
@@ -37,12 +35,8 @@ namespace SinaMerchant.Web.Controllers
         {
             if (id != null)
             {
-                var siteUser = await _unitOfWork.SiteUserRepository
-                .GetById(id);
-                if (siteUser == null)
-                {
-                    return NotFound();
-                }
+                var siteUser = await _genericService.GetById(id);
+                if (siteUser == null) return NotFound();
                 return View(siteUser);
             }
             else
@@ -60,13 +54,12 @@ namespace SinaMerchant.Web.Controllers
         // POST: SiteUsers/Create        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(SiteUser siteUser)
+        public async Task<IActionResult> Create(SiteUserViewModel siteUser)
         {
             if (ModelState.IsValid)
             {
-                var succes = await _unitOfWork.SiteUserRepository.InsertAsync(siteUser);
+                var succes = await _genericService.InsertAsync(siteUser);
                 ViewBag.Succes = succes;
-                await _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
 
             }
@@ -81,7 +74,7 @@ namespace SinaMerchant.Web.Controllers
                 return NotFound();
             }
 
-            var siteUser = await _unitOfWork.SiteUserRepository.GetById(id);
+            var siteUser = await _genericService.GetById(id);
             if (siteUser == null)
             {
                 return NotFound();
@@ -93,7 +86,7 @@ namespace SinaMerchant.Web.Controllers
         // POST: SiteUsers/Edit/5        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, SiteUser siteUser)
+        public async Task<IActionResult> Edit(int id, SiteUserViewModel siteUser)
         {
             if (id != siteUser.Id)
             {
@@ -104,8 +97,7 @@ namespace SinaMerchant.Web.Controllers
             {
                 try
                 {
-                    _unitOfWork.SiteUserRepository.Edit(siteUser);
-                    await _unitOfWork.Save();
+                    await _genericService.Edit(siteUser);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -131,7 +123,7 @@ namespace SinaMerchant.Web.Controllers
                 return NotFound();
             }
 
-            var siteUser = await _unitOfWork.SiteUserRepository.GetById(id);
+            var siteUser = await _genericService.GetById(id);
             if (siteUser == null)
             {
                 return NotFound();
@@ -145,24 +137,18 @@ namespace SinaMerchant.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_unitOfWork.SiteUserRepository.GetAll() == null)
+            if (_genericService.GetAll() == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.SiteUsers'  is null.");
             }
-            var siteUser = await _unitOfWork.SiteUserRepository.GetById(id);
-            if (siteUser != null)
-            {
-                _unitOfWork.SiteUserRepository.Delete(siteUser);
-            }
-
-            await _unitOfWork.Save();
+            await _genericService.DeleteById(id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool SiteUserExists(int id)
         {
-            var siteUser = _unitOfWork.SiteUserRepository.GetById(id);
-            return siteUser != null;
+            var siteUser = _genericService.GetById(id);
+            return siteUser.Result != null;
         }
     }
 }

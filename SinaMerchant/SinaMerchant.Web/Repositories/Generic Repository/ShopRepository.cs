@@ -24,7 +24,7 @@ namespace SinaMerchant.Web.Repositories
             return true;
         }
 
-        public async Task<ICollection<TEntity>>? GetAll()
+        public async Task<ICollection<TEntity>> GetAll()
         {
             return await _entities.ToListAsync();
         }
@@ -54,7 +54,7 @@ namespace SinaMerchant.Web.Repositories
         }
 
         public async Task<bool> Delete(TEntity entity)
-        {
+        {            
             _entities.Remove(entity);
             await Save();
             return true;

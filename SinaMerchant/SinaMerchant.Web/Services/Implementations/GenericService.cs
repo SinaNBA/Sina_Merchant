@@ -26,7 +26,7 @@ namespace SinaMerchant.Web.Services
             return true;
         }
 
-        public async Task<ICollection<TViewModel>>? GetAll()
+        public async Task<ICollection<TViewModel>> GetAll()
         {
             var entities = await _repository.GetAll();
             return _mapper.Map<ICollection<TViewModel>>(entities);
@@ -49,16 +49,16 @@ namespace SinaMerchant.Web.Services
             return _mapper.Map<ICollection<TViewModel>>(_repository.Filter(filterExpression));
         }
 
-        public bool Edit(TViewModel entityModel)
+        public async Task<bool> Edit(TViewModel entityModel)
         {
             var entity = _mapper.Map<TEntity>(entityModel);
-            return _repository.Edit(entity);
+            return await _repository.Edit(entity);
         }
 
-        public bool Delete(TViewModel entityModel)
+        public async Task<bool> Delete(TViewModel entityModel)
         {
             var entity = _mapper.Map<TEntity>(entityModel);
-            return _repository.Delete(entity);
+            return await _repository.Delete(entity);
         }
 
         public async Task<bool> DeleteById(object id)

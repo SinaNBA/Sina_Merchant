@@ -1,4 +1,4 @@
-﻿@model SinaMerchant.Web.Entities.SiteUser
+﻿@model SinaMerchant.Web.Models.ViewModels.SiteUserViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -63,17 +63,11 @@
         </form>
     </div>
 </div>
-
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-<script>
-    if (@ViewBag.Succes) {
-        alert("Succes");
-    }
-</script>
 @section Scripts {
     @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");        
     }
     }
