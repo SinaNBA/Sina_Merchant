@@ -18,9 +18,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 // Add Repos to the DI container
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+#region IoC
 builder.Services.AddScoped(typeof(IRepository<>), typeof(ShopRepository<>));
 builder.Services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>));
+#endregion
 
 var app = builder.Build();
 
