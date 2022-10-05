@@ -1,11 +1,16 @@
-﻿@using SinaMerchant.Web.Models.ViewModels
-@model IEnumerable<SiteUserViewModel>
+﻿@model IEnumerable<SiteUserViewModel>
 
 @{
     ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success p-1">
+        <p>@TempData["SuccessMessage"]</p>
+    </div>
+}
 
 <p>
     <a asp-action="Create">Create New</a>

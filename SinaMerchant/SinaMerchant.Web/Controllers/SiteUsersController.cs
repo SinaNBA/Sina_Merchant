@@ -54,12 +54,12 @@ namespace SinaMerchant.Web.Controllers
         // POST: SiteUsers/Create        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(SiteUserViewModel siteUser)
+        public async Task<IActionResult> Create([Bind("Email, Password,FName,LName,Address,City,PostalCode,Country,Phone")] SiteUserViewModel siteUser)
         {
             if (ModelState.IsValid)
             {
-                var succes = await _genericService.InsertAsync(siteUser);
-                ViewBag.Succes = succes;
+                var success = await _genericService.InsertAsync(siteUser);
+                if (success) TempData["SuccessMessage"] = "Succesfully Added.";
                 return RedirectToAction(nameof(Index));
 
             }
@@ -97,7 +97,8 @@ namespace SinaMerchant.Web.Controllers
             {
                 try
                 {
-                    await _genericService.Edit(siteUser);
+                    var success = await _genericService.Edit(siteUser);
+                    if (success) TempData["SuccessMessage"] = "Succesfully Edited.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -141,7 +142,10 @@ namespace SinaMerchant.Web.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.SiteUsers'  is null.");
             }
-            await _genericService.DeleteById(id);
+
+            var success = await _genericService.DeleteById(id);
+            if (success) TempData["SuccessMessage"] = "Succesfully deleted.";
+
             return RedirectToAction(nameof(Index));
         }
 
