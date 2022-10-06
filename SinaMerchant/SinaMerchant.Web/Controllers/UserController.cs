@@ -16,9 +16,9 @@ namespace SinaMerchant.Web.Controllers
 {
     public class UserController : Controller
     {
-        private readonly IGenericService<User, RegisterViewModel> _genericService;
+        private readonly IGenericService<User, UserViewModel> _genericService;
 
-        public UserController(IGenericService<User, RegisterViewModel> genericService)
+        public UserController(IGenericService<User, UserViewModel> genericService)
         {
             _genericService = genericService;
         }
@@ -54,7 +54,7 @@ namespace SinaMerchant.Web.Controllers
         // POST: User/Create        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Email, Password,FName,LName,Address,City,PostalCode,Country,Phone")] RegisterViewModel User)
+        public async Task<IActionResult> Create([Bind("Email, Password,FName,LName,Address,City,PostalCode,Country,Phone")] UserViewModel User)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace SinaMerchant.Web.Controllers
         // POST: User/Edit/5        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, RegisterViewModel User)
+        public async Task<IActionResult> Edit(int id, UserViewModel User)
         {
             if (id != User.Id)
             {

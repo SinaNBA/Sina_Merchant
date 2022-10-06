@@ -29,7 +29,7 @@ namespace SinaMerchant.Web.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SiteUsers",
+                name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -46,7 +46,7 @@ namespace SinaMerchant.Web.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SiteUsers", x => x.Id);
+                    table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -96,7 +96,7 @@ namespace SinaMerchant.Web.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SiteUserId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(10,2)", precision: 10, scale: 2, nullable: false)
                 },
@@ -104,9 +104,9 @@ namespace SinaMerchant.Web.Migrations
                 {
                     table.PrimaryKey("PK_ShopOrders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ShopOrders_SiteUsers_SiteUserId",
-                        column: x => x.SiteUserId,
-                        principalTable: "SiteUsers",
+                        name: "FK_ShopOrders_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -243,9 +243,9 @@ namespace SinaMerchant.Web.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ShopOrders_SiteUserId",
+                name: "IX_ShopOrders_UserId",
                 table: "ShopOrders",
-                column: "SiteUserId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VariationOptions_VariationId",
@@ -276,7 +276,7 @@ namespace SinaMerchant.Web.Migrations
                 name: "VariationOptions");
 
             migrationBuilder.DropTable(
-                name: "SiteUsers");
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Products");
