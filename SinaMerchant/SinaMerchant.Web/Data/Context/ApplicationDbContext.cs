@@ -9,7 +9,7 @@ namespace SinaMerchant.Web.Data.Context
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         #region DbSets
-        public DbSet<SiteUser> SiteUsers { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<ShopOrder> ShopOrders { get; set; }
         public DbSet<Product> Products { get; set; }
@@ -22,7 +22,7 @@ namespace SinaMerchant.Web.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<SiteUser>(x =>
+            modelBuilder.Entity<User>(x =>
             {
                 x.HasKey(x => x.Id);
                 x.Property(x => x.Email).HasMaxLength(50);
@@ -34,7 +34,7 @@ namespace SinaMerchant.Web.Data.Context
                 x.Property(x => x.PostalCode).HasMaxLength(50);
                 x.Property(x => x.Country).HasMaxLength(50);
                 x.Property(x => x.Phone).HasMaxLength(50);
-                x.HasMany(x => x.ShopOrders).WithOne(x => x.SiteUser);
+                x.HasMany(x => x.ShopOrders).WithOne(x => x.User);
             });
 
             modelBuilder.Entity<OrderDetail>(x =>
@@ -48,7 +48,7 @@ namespace SinaMerchant.Web.Data.Context
             modelBuilder.Entity<ShopOrder>(x =>
             {
                 x.HasKey(x => x.Id);
-                x.HasOne(x => x.SiteUser).WithMany(x => x.ShopOrders).HasForeignKey(x => x.SiteUserId);
+                x.HasOne(x => x.User).WithMany(x => x.ShopOrders).HasForeignKey(x => x.UserId);
                 x.Property(x => x.Price).HasPrecision(10, 2);
                 x.HasMany(x => x.OrderDetails).WithOne(x => x.ShopOrder);
             });

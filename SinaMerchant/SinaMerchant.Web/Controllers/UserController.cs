@@ -14,30 +14,30 @@ using SinaMerchant.Web.Services;
 
 namespace SinaMerchant.Web.Controllers
 {
-    public class SiteUsersController : Controller
+    public class UserController : Controller
     {
-        private readonly IGenericService<SiteUser, SiteUserViewModel> _genericService;
+        private readonly IGenericService<User, RegisterViewModel> _genericService;
 
-        public SiteUsersController(IGenericService<SiteUser, SiteUserViewModel> genericService)
+        public UserController(IGenericService<User, RegisterViewModel> genericService)
         {
             _genericService = genericService;
         }
 
 
-        // GET: SiteUsers        
+        // GET: User        
         public async Task<IActionResult> Index()
         {
             return View(await _genericService.GetAll());
         }
 
-        // GET: SiteUsers/Details/5        
+        // GET: User/Details/5        
         public async Task<IActionResult> Details(int? id)
         {
             if (id != null)
             {
-                var siteUser = await _genericService.GetById(id);
-                if (siteUser == null) return NotFound();
-                return View(siteUser);
+                var User = await _genericService.GetById(id);
+                if (User == null) return NotFound();
+                return View(User);
             }
             else
             {
@@ -45,28 +45,28 @@ namespace SinaMerchant.Web.Controllers
             }
         }
 
-        // GET: SiteUsers/Create        
+        // GET: User/Create        
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: SiteUsers/Create        
+        // POST: User/Create        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Email, Password,FName,LName,Address,City,PostalCode,Country,Phone")] SiteUserViewModel siteUser)
+        public async Task<IActionResult> Create([Bind("Email, Password,FName,LName,Address,City,PostalCode,Country,Phone")] RegisterViewModel User)
         {
             if (ModelState.IsValid)
             {
-                var success = await _genericService.InsertAsync(siteUser);
+                var success = await _genericService.InsertAsync(User);
                 if (success) TempData["SuccessMessage"] = "Succesfully Added.";
                 return RedirectToAction(nameof(Index));
 
             }
-            return View(siteUser);
+            return View(User);
         }
 
-        // GET: SiteUsers/Edit/5        
+        // GET: User/Edit/5        
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -74,21 +74,21 @@ namespace SinaMerchant.Web.Controllers
                 return NotFound();
             }
 
-            var siteUser = await _genericService.GetById(id);
-            if (siteUser == null)
+            var User = await _genericService.GetById(id);
+            if (User == null)
             {
                 return NotFound();
             }
 
-            return View(siteUser);
+            return View(User);
         }
 
-        // POST: SiteUsers/Edit/5        
+        // POST: User/Edit/5        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, SiteUserViewModel siteUser)
+        public async Task<IActionResult> Edit(int id, RegisterViewModel User)
         {
-            if (id != siteUser.Id)
+            if (id != User.Id)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace SinaMerchant.Web.Controllers
             {
                 try
                 {
-                    var success = await _genericService.Edit(siteUser);
+                    var success = await _genericService.Edit(User);
                     if (success) TempData["SuccessMessage"] = "Succesfully Edited.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SiteUserExists(siteUser.Id))
+                    if (!UserExists(User.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +113,10 @@ namespace SinaMerchant.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(siteUser);
+            return View(User);
         }
 
-        // GET: SiteUsers/Delete/5        
+        // GET: User/Delete/5        
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,16 +124,16 @@ namespace SinaMerchant.Web.Controllers
                 return NotFound();
             }
 
-            var siteUser = await _genericService.GetById(id);
-            if (siteUser == null)
+            var User = await _genericService.GetById(id);
+            if (User == null)
             {
                 return NotFound();
             }
 
-            return View(siteUser);
+            return View(User);
         }
 
-        // POST: SiteUsers/Delete/5
+        // POST: User/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -149,10 +149,10 @@ namespace SinaMerchant.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SiteUserExists(int id)
+        private bool UserExists(int id)
         {
-            var siteUser = _genericService.GetById(id);
-            return siteUser.Result != null;
+            var User = _genericService.GetById(id);
+            return User.Result != null;
         }
     }
 }

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SinaMerchant.Web.Models.ViewModels
 {
-    public class SiteUserViewModel
+    public class RegisterViewModel
     {
         public int Id { get; set; }
         [Required]

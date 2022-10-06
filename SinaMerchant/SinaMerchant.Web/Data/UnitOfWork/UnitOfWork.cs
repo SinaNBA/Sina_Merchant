@@ -7,15 +7,15 @@ namespace SinaMerchant.Web.Data
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _context;
-        private readonly IRepository<SiteUser> _siteRepository;
+        private readonly IRepository<User> _siteRepository;
 
-        public UnitOfWork(ApplicationDbContext context, IRepository<SiteUser> siteRepository)
+        public UnitOfWork(ApplicationDbContext context, IRepository<User> siteRepository)
         {
             _context = context;
             _siteRepository = siteRepository;
         }
 
-        public IRepository<SiteUser> SiteUserRepository => _siteRepository;
+        public IRepository<User> SiteUserRepository => _siteRepository;
 
         public IRepository<OrderDetail> OrderDetailRepository => OrderDetailRepository;
 
