@@ -1,5 +1,5 @@
 ﻿using SinaMerchant.Web.Data.Context;
-using SinaMerchant.Web.Data.Entities;
+using SinaMerchant.Web.Entities;
 using SinaMerchant.Web.Repositories;
 
 namespace SinaMerchant.Web.Data
@@ -7,15 +7,15 @@ namespace SinaMerchant.Web.Data
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _context;
-        private readonly IRepository<SiteUser> _siteRepository;
+        private readonly IRepository<User> _siteRepository;
 
-        public UnitOfWork(ApplicationDbContext context, IRepository<SiteUser> siteRepository)
+        public UnitOfWork(ApplicationDbContext context, IRepository<User> siteRepository)
         {
             _context = context;
             _siteRepository = siteRepository;
         }
 
-        public IRepository<SiteUser> SiteUserRepository => _siteRepository;
+        public IRepository<User> SiteUserRepository => _siteRepository;
 
         public IRepository<OrderDetail> OrderDetailRepository => OrderDetailRepository;
 
@@ -33,9 +33,9 @@ namespace SinaMerchant.Web.Data
 
         public IRepository<VariationOption> VariationOptionRepository => VariationOptionRepository;
 
-        public void Save()
+        public async Task Save()
         {
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public void Dispose()

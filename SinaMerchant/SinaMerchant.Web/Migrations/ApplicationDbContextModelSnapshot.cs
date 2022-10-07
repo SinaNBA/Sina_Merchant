@@ -22,7 +22,7 @@ namespace SinaMerchant.Web.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.OrderDetail", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.OrderDetail", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -52,7 +52,7 @@ namespace SinaMerchant.Web.Migrations
                     b.ToTable("OrderDetails");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.Product", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.Product", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -82,7 +82,7 @@ namespace SinaMerchant.Web.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.ProductCategory", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.ProductCategory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -105,7 +105,7 @@ namespace SinaMerchant.Web.Migrations
                     b.ToTable("ProductCategories");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.ProductConfig", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.ProductConfig", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -128,7 +128,7 @@ namespace SinaMerchant.Web.Migrations
                     b.ToTable("ProductConfigs");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.ProductItem", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.ProductItem", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -160,7 +160,7 @@ namespace SinaMerchant.Web.Migrations
                     b.ToTable("ProductItems");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.ShopOrder", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.ShopOrder", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -175,17 +175,17 @@ namespace SinaMerchant.Web.Migrations
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<int>("SiteUserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SiteUserId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("ShopOrders");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.SiteUser", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -214,6 +214,9 @@ namespace SinaMerchant.Web.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -231,12 +234,15 @@ namespace SinaMerchant.Web.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<DateTime>("RegisterDate")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
-                    b.ToTable("SiteUsers");
+                    b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.Variation", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.Variation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -259,7 +265,7 @@ namespace SinaMerchant.Web.Migrations
                     b.ToTable("Variations");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.VariationOption", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.VariationOption", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -282,15 +288,15 @@ namespace SinaMerchant.Web.Migrations
                     b.ToTable("VariationOptions");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.OrderDetail", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.OrderDetail", b =>
                 {
-                    b.HasOne("SinaMerchant.Web.Data.Entities.ShopOrder", "ShopOrder")
+                    b.HasOne("SinaMerchant.Web.Entities.ShopOrder", "ShopOrder")
                         .WithMany("OrderDetails")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SinaMerchant.Web.Data.Entities.ProductItem", "ProductItem")
+                    b.HasOne("SinaMerchant.Web.Entities.ProductItem", "ProductItem")
                         .WithMany("OrderDetails")
                         .HasForeignKey("ProductItemId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -301,9 +307,9 @@ namespace SinaMerchant.Web.Migrations
                     b.Navigation("ShopOrder");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.Product", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.Product", b =>
                 {
-                    b.HasOne("SinaMerchant.Web.Data.Entities.ProductCategory", "Category")
+                    b.HasOne("SinaMerchant.Web.Entities.ProductCategory", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -312,24 +318,24 @@ namespace SinaMerchant.Web.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.ProductCategory", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.ProductCategory", b =>
                 {
-                    b.HasOne("SinaMerchant.Web.Data.Entities.ProductCategory", "Parent")
+                    b.HasOne("SinaMerchant.Web.Entities.ProductCategory", "Parent")
                         .WithMany("Childs")
                         .HasForeignKey("ParentId");
 
                     b.Navigation("Parent");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.ProductConfig", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.ProductConfig", b =>
                 {
-                    b.HasOne("SinaMerchant.Web.Data.Entities.ProductItem", "ProductItem")
+                    b.HasOne("SinaMerchant.Web.Entities.ProductItem", "ProductItem")
                         .WithMany("ProductConfigs")
                         .HasForeignKey("ProductItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SinaMerchant.Web.Data.Entities.VariationOption", "VariationOption")
+                    b.HasOne("SinaMerchant.Web.Entities.VariationOption", "VariationOption")
                         .WithMany("ProductConfigs")
                         .HasForeignKey("VariationOptionId");
 
@@ -338,9 +344,9 @@ namespace SinaMerchant.Web.Migrations
                     b.Navigation("VariationOption");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.ProductItem", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.ProductItem", b =>
                 {
-                    b.HasOne("SinaMerchant.Web.Data.Entities.Product", "Product")
+                    b.HasOne("SinaMerchant.Web.Entities.Product", "Product")
                         .WithMany("ProductItems")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -349,20 +355,20 @@ namespace SinaMerchant.Web.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.ShopOrder", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.ShopOrder", b =>
                 {
-                    b.HasOne("SinaMerchant.Web.Data.Entities.SiteUser", "SiteUser")
+                    b.HasOne("SinaMerchant.Web.Entities.User", "User")
                         .WithMany("ShopOrders")
-                        .HasForeignKey("SiteUserId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("SiteUser");
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.Variation", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.Variation", b =>
                 {
-                    b.HasOne("SinaMerchant.Web.Data.Entities.ProductCategory", "Category")
+                    b.HasOne("SinaMerchant.Web.Entities.ProductCategory", "Category")
                         .WithMany("Variations")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -371,9 +377,9 @@ namespace SinaMerchant.Web.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.VariationOption", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.VariationOption", b =>
                 {
-                    b.HasOne("SinaMerchant.Web.Data.Entities.Variation", "Variation")
+                    b.HasOne("SinaMerchant.Web.Entities.Variation", "Variation")
                         .WithMany("VariationOptions")
                         .HasForeignKey("VariationId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -382,12 +388,12 @@ namespace SinaMerchant.Web.Migrations
                     b.Navigation("Variation");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.Product", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.Product", b =>
                 {
                     b.Navigation("ProductItems");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.ProductCategory", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.ProductCategory", b =>
                 {
                     b.Navigation("Childs");
 
@@ -396,29 +402,29 @@ namespace SinaMerchant.Web.Migrations
                     b.Navigation("Variations");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.ProductItem", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.ProductItem", b =>
                 {
                     b.Navigation("OrderDetails");
 
                     b.Navigation("ProductConfigs");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.ShopOrder", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.ShopOrder", b =>
                 {
                     b.Navigation("OrderDetails");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.SiteUser", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.User", b =>
                 {
                     b.Navigation("ShopOrders");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.Variation", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.Variation", b =>
                 {
                     b.Navigation("VariationOptions");
                 });
 
-            modelBuilder.Entity("SinaMerchant.Web.Data.Entities.VariationOption", b =>
+            modelBuilder.Entity("SinaMerchant.Web.Entities.VariationOption", b =>
                 {
                     b.Navigation("ProductConfigs");
                 });
