@@ -12,7 +12,7 @@ using SinaMerchant.Web.Data.Context;
 namespace SinaMerchant.Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221006102651_InitialDB")]
+    [Migration("20221006202143_InitialDB")]
     partial class InitialDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -216,6 +216,9 @@ namespace SinaMerchant.Web.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -232,6 +235,9 @@ namespace SinaMerchant.Web.Migrations
                     b.Property<string>("PostalCode")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime>("RegisterDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

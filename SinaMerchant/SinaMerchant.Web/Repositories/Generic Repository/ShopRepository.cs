@@ -46,6 +46,16 @@ namespace SinaMerchant.Web.Repositories
             return await _entities.FirstOrDefaultAsync(filterExpression);
         }
 
+        public async Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> filterExpression)
+        {
+            return await _entities.SingleOrDefaultAsync(filterExpression);
+        }
+
+        public async Task<bool> IsExist(Expression<Func<TEntity, bool>> filterExpression)
+        {
+            return await _entities.AnyAsync(filterExpression);
+        }
+
         public async Task<bool> Edit(TEntity entity)
         {
             _entities.Update(entity);
@@ -54,7 +64,7 @@ namespace SinaMerchant.Web.Repositories
         }
 
         public async Task<bool> Delete(TEntity entity)
-        {            
+        {
             _entities.Remove(entity);
             await Save();
             return true;
@@ -75,5 +85,6 @@ namespace SinaMerchant.Web.Repositories
         {
             _context.Dispose();
         }
+
     }
 }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SinaMerchant.Web</title>
     <partial name="_HeaderReferences" />
+    @RenderSection("AdditionalHeadReferences", required: false)
 </head>
 <body>
     @await Component.InvokeAsync("SiteHeader")

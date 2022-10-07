@@ -9,6 +9,8 @@ namespace SinaMerchant.Web.Services
         Task<TViewModel> GetById(object id);
         ICollection<TViewModel>? Filter(Expression<Func<TEntity, bool>> filterExpression);
         Task<TViewModel> GetFirstAsync(Expression<Func<TEntity, bool>> filterExpression);
+        Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> filterExpression);
+        Task<bool> IsExist(Expression<Func<TEntity, bool>> filterExpression);
         Task<bool> Edit(TViewModel entityModel);
         Task<bool> Delete(TViewModel entityModel);
         Task<bool> DeleteById(object id);

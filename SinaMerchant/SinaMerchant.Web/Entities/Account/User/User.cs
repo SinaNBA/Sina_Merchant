@@ -15,6 +15,8 @@ namespace SinaMerchant.Web.Entities
         public string? PostalCode { get; set; }
         public string? Country { get; set; }
         public string? Phone { get; set; }
+        public bool IsAdmin { get; set; }
+        public DateTime RegisterDate { get; set; }
 
         public ICollection<ShopOrder>? ShopOrders { get; set; }
     }

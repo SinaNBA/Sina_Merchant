@@ -22,8 +22,7 @@ namespace SinaMerchant.Web.Services
         public async Task<bool> InsertAsync(TViewModel entityModel)
         {
             var entity = _mapper.Map<TEntity>(entityModel);
-            var result = await _repository.InsertAsync(entity);
-            return true;
+            return await _repository.InsertAsync(entity);
         }
 
         public async Task<ICollection<TViewModel>> GetAll()
@@ -49,6 +48,16 @@ namespace SinaMerchant.Web.Services
             return _mapper.Map<ICollection<TViewModel>>(_repository.Filter(filterExpression));
         }
 
+        public Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> filterExpression)
+        {
+            return _repository.GetSingleAsync(filterExpression);
+        }
+
+        public Task<bool> IsExist(Expression<Func<TEntity, bool>> filterExpression)
+        {
+            return _repository.IsExist(filterExpression);
+        }
+
         public async Task<bool> Edit(TViewModel entityModel)
         {
             var entity = _mapper.Map<TEntity>(entityModel);
@@ -65,5 +74,6 @@ namespace SinaMerchant.Web.Services
         {
             return await _repository.DeleteById(id);
         }
+
     }
 }
