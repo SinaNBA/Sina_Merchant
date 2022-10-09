@@ -12,9 +12,9 @@ using SinaMerchant.Web.Entities;
 using SinaMerchant.Web.Models.ViewModels;
 using SinaMerchant.Web.Services;
 
-namespace SinaMerchant.Web.Controllers
+namespace SinaMerchant.Web.Areas.Admin.Controllers
 {
-    public class UserController : Controller
+    public class UserController : AdminBaseController
     {
         private readonly IGenericService<User, UserViewModel> _genericService;
 

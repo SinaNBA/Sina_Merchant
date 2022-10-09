@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Win32;
 using SinaMerchant.Web.Entities;
 using SinaMerchant.Web.Models.ViewModels;
 using SinaMerchant.Web.Services;
@@ -34,15 +35,24 @@ namespace SinaMerchant.Web.Controllers
                 return View(register);
             }
 
-            var IsExist = await _genericService.IsExist(x => x.Email == register.Email.ToLower().Trim());
-            if (IsExist)
-            {
-                ModelState.AddModelError("Email", "This email has registered before!");
-                return View(register);
-            }
+            //var IsExist = await _genericService.IsExist(x => x.Email == register.Email.ToLower().Trim());
+            //if (IsExist)
+            //{
+            //    ModelState.AddModelError("Email", "This email has registered before!");
+            //    return View(register);
+            //}
             var success = await _genericService.InsertAsync(register);
             if (success) TempData["SuccessMessage"] = "Succesfully Added.";
             return Redirect("/");
+        }
+
+        public async Task<IActionResult> VerifyEmail(string email)
+        {
+            if (await _genericService.IsExist(x => x.Email == email.ToLower().Trim()))
+            {
+                return Json($"A user with email {email} has already registered");
+            }
+            return Json(true);
         }
         #endregion
 
@@ -94,6 +104,7 @@ namespace SinaMerchant.Web.Controllers
             return Redirect("/Account/Login");
         }
         #endregion
+
 
     }
 }
