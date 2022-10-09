@@ -17,12 +17,13 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
     public class UserController : AdminBaseController
     {
         private readonly IGenericService<User, UserViewModel> _genericService;
+        private readonly IPasswordHelper _passwordHelper;
 
-        public UserController(IGenericService<User, UserViewModel> genericService)
+        public UserController(IGenericService<User, UserViewModel> genericService, IPasswordHelper passwordHelper)
         {
             _genericService = genericService;
+            _passwordHelper = passwordHelper;
         }
-
 
         // GET: User        
         public async Task<IActionResult> Index()
@@ -54,16 +55,19 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         // POST: User/Create        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Email, Password,FName,LName,Address,City,PostalCode,Country,Phone")] UserViewModel User)
+        public async Task<IActionResult> Create([Bind("Email, Password,FName,LName,Address,City,PostalCode,Country,Phone")] UserViewModel user)
         {
             if (ModelState.IsValid)
             {
-                var success = await _genericService.InsertAsync(User);
+                user.Password = _passwordHelper.HashPassword(user.Password);
+                user.Email = user.Email.ToLower().Trim();
+                
+                var success = await _genericService.InsertAsync(user);
                 if (success) TempData["SuccessMessage"] = "Succesfully Added.";
                 return RedirectToAction(nameof(Index));
 
             }
-            return View(User);
+            return View(user);
         }
 
         // GET: User/Edit/5        

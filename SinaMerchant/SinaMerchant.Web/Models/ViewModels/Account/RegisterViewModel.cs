@@ -41,6 +41,7 @@ namespace SinaMerchant.Web.Models.ViewModels
         public string? Country { get; set; }
         [MaxLength(50)]
         public string? Phone { get; set; }
+        public bool IsAdmin { get; set; }
         [Required]
         public DateTime RegisterDate { get; set; }
     }

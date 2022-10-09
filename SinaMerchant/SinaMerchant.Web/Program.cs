@@ -25,6 +25,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 #region IoC
 builder.Services.AddScoped(typeof(IRepository<>), typeof(ShopRepository<>));
 builder.Services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>));
+builder.Services.AddScoped<IPasswordHelper, MD5PasswordHelper>();
 #endregion
 
 #region Authentication

@@ -1,3 +1,9 @@
 ﻿@{
     ViewData["Title"] = "Home";
 }
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success p-1">
+        <p>@TempData["SuccessMessage"]</p>
+    </div>
+}
