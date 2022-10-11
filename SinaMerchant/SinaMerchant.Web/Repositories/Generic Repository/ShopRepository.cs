@@ -58,13 +58,17 @@ namespace SinaMerchant.Web.Repositories
 
         public async Task<bool> Edit(TEntity entity)
         {
-            _entities.Update(entity);
+            _context.Entry(entity).State = EntityState.Modified;
             await Save();
             return true;
         }
 
         public async Task<bool> Delete(TEntity entity)
         {
+            if (_context.Entry(entity).State == EntityState.Detached)
+            {
+                _context.Attach(entity);
+            }
             _entities.Remove(entity);
             await Save();
             return true;

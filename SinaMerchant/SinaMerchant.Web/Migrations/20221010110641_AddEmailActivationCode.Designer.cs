@@ -12,8 +12,8 @@ using SinaMerchant.Web.Data.Context;
 namespace SinaMerchant.Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221006202143_InitialDB")]
-    partial class InitialDB
+    [Migration("20221010110641_AddEmailActivationCode")]
+    partial class AddEmailActivationCode
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -212,9 +212,17 @@ namespace SinaMerchant.Web.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("EmailActiveCode")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<string>("FName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("bit");
@@ -225,8 +233,8 @@ namespace SinaMerchant.Web.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Phone")
                         .HasMaxLength(50)

@@ -26,7 +26,7 @@ namespace SinaMerchant.Web.Data.Context
             {
                 x.HasKey(x => x.Id);
                 x.Property(x => x.Email).HasMaxLength(50);
-                x.Property(x => x.Password).HasMaxLength(10);
+                x.Property(x => x.Password).HasMaxLength(200);
                 x.Property(x => x.FName).HasMaxLength(50);
                 x.Property(x => x.LName).HasMaxLength(50);
                 x.Property(x => x.Address).HasMaxLength(50);
@@ -34,6 +34,7 @@ namespace SinaMerchant.Web.Data.Context
                 x.Property(x => x.PostalCode).HasMaxLength(50);
                 x.Property(x => x.Country).HasMaxLength(50);
                 x.Property(x => x.Phone).HasMaxLength(50);
+                x.Property(x => x.EmailActiveCode).HasMaxLength(200);
                 x.HasMany(x => x.ShopOrders).WithOne(x => x.User);
             });
 
