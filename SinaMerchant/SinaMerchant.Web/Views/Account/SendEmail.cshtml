@@ -1,0 +1,11 @@
+﻿@model SendEmailViewModel
+<form asp-controller="Account" asp-action="SendEmail">
+    <div class="row alert alert-success text-center">
+        <p class="align-content-center display-6">
+            <input type="hidden" asp-for="Email" value="@Model.Email" />
+            <input type="hidden" asp-for="EmailActiveCode" value="@Model.EmailActiveCode" />
+            We sent an email with confirmation link. If you don't recieved it
+            <button class="btn btn-lg btn-primary" type="submit">Click here!</button>
+        </p>
+    </div>
+</form>

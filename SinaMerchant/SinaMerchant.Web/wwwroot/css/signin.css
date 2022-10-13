@@ -78,16 +78,20 @@ body {
         border-bottom-left-radius: 0;
     }
 
-    .Pass input[type="password"] {
-        margin-bottom: -1px;
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
-        border-bottom-left-radius: 0;
-    }
+.Pass input[type="password"] {
+    margin-bottom: -1px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
 
 .ConfirmPass input[type="password"] {
     margin-bottom: 10px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+}
+
+.resetButton {
+    margin: 5px 0;
 }

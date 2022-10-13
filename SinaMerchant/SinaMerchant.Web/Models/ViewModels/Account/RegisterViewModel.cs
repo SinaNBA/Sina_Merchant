@@ -7,7 +7,7 @@ namespace SinaMerchant.Web.Models.ViewModels
 {
     public class RegisterViewModel
     {
-
+        public int Id { get; set; }
         [Required]
         [DataType(DataType.EmailAddress)]
         [MaxLength(50)]
@@ -43,6 +43,7 @@ namespace SinaMerchant.Web.Models.ViewModels
         [MaxLength(50)]
         public string? Phone { get; set; }
         public string? EmailActiveCode { get; set; }
+        public bool IsActive { get; set; }
         [Required]
         public DateTime RegisterDate { get; set; }
     }

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SinaMerchant.Web.AutoMapperProfile;
 using SinaMerchant.Web.Repositories;
 using System.Linq.Expressions;
@@ -17,7 +18,8 @@ namespace SinaMerchant.Web.Services
             _mapper = mapper;
         }
 
-        public IQueryable<TViewModel> entities => throw new NotImplementedException();
+        public IQueryable<TEntity> Entities => _repository.Entities;
+
 
         public async Task<bool> InsertAsync(TViewModel entityModel)
         {
