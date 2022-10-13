@@ -65,10 +65,10 @@ namespace SinaMerchant.Web.Repositories
 
         public async Task<bool> Delete(TEntity entity)
         {
-            if (_context.Entry(entity).State == EntityState.Detached)
-            {
-                _context.Attach(entity);
-            }
+            //if (_context.Entry(entity).State == EntityState.Detached)
+            //{
+            //    _context.Attach(entity);
+            //}
             _entities.Remove(entity);
             await Save();
             return true;
