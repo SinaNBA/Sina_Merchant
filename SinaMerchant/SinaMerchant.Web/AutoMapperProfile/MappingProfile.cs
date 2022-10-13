@@ -8,9 +8,9 @@ namespace SinaMerchant.Web.AutoMapperProfile
     {
         public MappingProfile()
         {
-            CreateMap<User, UserViewModel>().ReverseMap();
-
+            CreateMap<User, UserAddEditViewModel>().ReverseMap();
             CreateMap<User, RegisterViewModel>().ReverseMap();
+            CreateMap<IQueryable<User>, IQueryable<RegisterViewModel>>().ReverseMap();
             CreateMap<OrderDetail, OrderDetailViewModel>().ReverseMap();
             CreateMap<ShopOrder, ShopOrderViewModel>().ReverseMap();
             CreateMap<Product, ProductViewModel>().ReverseMap();

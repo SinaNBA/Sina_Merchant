@@ -1,4 +1,5 @@
-﻿using SinaMerchant.Web.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SinaMerchant.Web.Data;
 using System.Linq.Expressions;
 
 namespace SinaMerchant.Web.Repositories
@@ -17,7 +18,7 @@ namespace SinaMerchant.Web.Repositories
         Task<bool> DeleteById(object id);
         Task Save();
 
-        IQueryable<TEntity> entities { get; }
+        IQueryable<TEntity> Entities { get; }
 
 
     }

@@ -15,7 +15,7 @@ namespace SinaMerchant.Web.Repositories
             _entities = _context.Set<TEntity>();
         }
 
-        public IQueryable<TEntity> entities => _entities;
+        public IQueryable<TEntity> Entities => _entities;
 
         public async Task<bool> InsertAsync(TEntity entity)
         {
@@ -58,13 +58,17 @@ namespace SinaMerchant.Web.Repositories
 
         public async Task<bool> Edit(TEntity entity)
         {
-            _entities.Update(entity);
+            _context.Update(entity);
             await Save();
             return true;
         }
 
         public async Task<bool> Delete(TEntity entity)
         {
+            if (_context.Entry(entity).State == EntityState.Detached)
+            {
+                _context.Attach(entity);
+            }
             _entities.Remove(entity);
             await Save();
             return true;

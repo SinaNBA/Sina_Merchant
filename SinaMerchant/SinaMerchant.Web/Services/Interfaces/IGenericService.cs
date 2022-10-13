@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace SinaMerchant.Web.Services
 {
@@ -15,6 +16,6 @@ namespace SinaMerchant.Web.Services
         Task<bool> Delete(TViewModel entityModel);
         Task<bool> DeleteById(object id);
 
-        IQueryable<TViewModel> entities { get; }
+        IQueryable<TEntity> Entities { get; }
     }
 }

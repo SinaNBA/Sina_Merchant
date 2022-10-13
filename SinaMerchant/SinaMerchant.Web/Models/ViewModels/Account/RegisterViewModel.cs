@@ -1,22 +1,26 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using System.Xml.Linq;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SinaMerchant.Web.Models.ViewModels
 {
     public class RegisterViewModel
     {
+        public int Id { get; set; }
         [Required]
         [DataType(DataType.EmailAddress)]
         [MaxLength(50)]
+        [Remote("VerifyEmail", "Account")]
         public string Email { get; set; }
         [Required]
         [DataType(DataType.Password)]
-        [MaxLength(10)]
+        [MaxLength(200)]
+        [RegularExpression(@"^(?=.*[0-9A-Za-z])(?=.*\d)[A-Za-z\d]{6,10}$", ErrorMessage = "Passwords must be contain at least an letter and a digit. Min length of '6' , Max length of '10'.")]
         public string Password { get; set; }
         [Required]
         [DataType(DataType.Password)]
-        [MaxLength(10)]
+        [MaxLength(200)]
         [Compare("Password")]
         [Display(Name = "Confirm Password")]
         public string ConfirmPassword { get; set; }
@@ -38,6 +42,8 @@ namespace SinaMerchant.Web.Models.ViewModels
         public string? Country { get; set; }
         [MaxLength(50)]
         public string? Phone { get; set; }
+        public string? EmailActiveCode { get; set; }
+        public bool IsActive { get; set; }
         [Required]
         public DateTime RegisterDate { get; set; }
     }

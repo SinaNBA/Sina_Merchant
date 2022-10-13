@@ -5,8 +5,17 @@
     ViewData["Title"] = "Login";
 }
 
+
 <main class="form-signin w-100 m-auto">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success p-1">
+            <p>@TempData["SuccessMessage"]</p>
+        </div>
+    }
+
     <form asp-controller="Account" asp-action="Login">
+        <input type="hidden" value="@ViewBag.referer" name="referer" />
 
         <img class="mb-4" src="~/Images/bootstrap-logo.svg" alt="" width="72" height="57">
         <h1 class="h3 mb-3 fw-normal">Please Login</h1>
@@ -28,7 +37,8 @@
             </label>
         </div>
         <button class="w-100 btn btn-lg btn-primary" type="submit">Login</button>
-        <a asp-controller="Account" asp-action="Register">Register</a>
+        <a asp-controller="Account" asp-action="ForgotPassword" class="col-form-label-lg d-block">Forgot Password?!</a>
+        <a asp-controller="Account" asp-action="Register" class="col-form-label-lg d-block">Register</a>
         <p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>
     </form>
 </main>
