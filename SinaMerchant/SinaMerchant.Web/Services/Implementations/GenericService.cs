@@ -18,7 +18,7 @@ namespace SinaMerchant.Web.Services
             _mapper = mapper;
         }
 
-        public IQueryable<TEntity> Entities => _repository.Entities;
+        public IQueryable<TViewModel> Entities => _mapper.Map<IQueryable<TViewModel>>(_repository.Entities);
 
 
         public async Task<bool> InsertAsync(TViewModel entityModel)

@@ -16,6 +16,6 @@ namespace SinaMerchant.Web.Services
         Task<bool> Delete(TViewModel entityModel);
         Task<bool> DeleteById(object id);
 
-        IQueryable<TEntity> Entities { get; }
+        IQueryable<TViewModel> Entities { get; }
     }
 }

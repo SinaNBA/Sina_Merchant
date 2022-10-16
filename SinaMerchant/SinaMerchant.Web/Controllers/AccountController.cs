@@ -92,8 +92,7 @@ namespace SinaMerchant.Web.Controllers
             {
                 user.IsActive = true;
                 user.EmailActiveCode = Guid.NewGuid().ToString("N");
-                var userViewModel = _mapper.Map<RegisterViewModel>(user);
-                var success = await _userService.Edit(userViewModel);
+                var success = await _userService.Edit(user);
                 if (success) return RedirectToAction("Login");
             }
 

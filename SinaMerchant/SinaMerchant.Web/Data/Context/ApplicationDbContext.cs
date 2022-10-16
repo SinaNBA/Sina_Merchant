@@ -20,6 +20,7 @@ namespace SinaMerchant.Web.Data.Context
         public DbSet<VariationOption> VariationOptions { get; set; }
         #endregion
 
+        #region Fluent API
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>(x =>
@@ -111,5 +112,7 @@ namespace SinaMerchant.Web.Data.Context
             base.OnModelCreating(modelBuilder);
 
         }
+        #endregion
+
     }
 }

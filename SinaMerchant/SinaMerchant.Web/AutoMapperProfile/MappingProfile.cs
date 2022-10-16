@@ -15,11 +15,12 @@ namespace SinaMerchant.Web.AutoMapperProfile
             CreateMap<ShopOrder, ShopOrderViewModel>().ReverseMap();
             CreateMap<Product, ProductViewModel>().ReverseMap();
             CreateMap<ProductCategory, ProductCategoryViewModel>().ReverseMap();
+            CreateMap<IQueryable<ProductCategory>, IQueryable<ProductCategoryViewModel>>().ReverseMap();                
             CreateMap<ProductConfig, ProductConfigViewModel>().ReverseMap();
             CreateMap<ProductItem, ProductItemViewModel>().ReverseMap();
             CreateMap<Variation, VariationViewModel>().ReverseMap();
             CreateMap<VariationOption, VariationOptionViewModel>().ReverseMap();
-
+            
         }
 
     }
