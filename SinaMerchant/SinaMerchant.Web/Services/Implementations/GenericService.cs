@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using SinaMerchant.Web.AutoMapperProfile;
 using SinaMerchant.Web.Repositories;
 using System.Linq.Expressions;
 
@@ -18,7 +17,7 @@ namespace SinaMerchant.Web.Services
             _mapper = mapper;
         }
 
-        public IQueryable<TViewModel> Entities => _mapper.Map<IQueryable<TViewModel>>(_repository.Entities);
+        public IEnumerable<TViewModel> Entities => _mapper.Map<IEnumerable<TViewModel>>(_repository.Entities);
 
 
         public async Task<bool> InsertAsync(TViewModel entityModel)
@@ -55,21 +54,27 @@ namespace SinaMerchant.Web.Services
             return _repository.GetSingleAsync(filterExpression);
         }
 
+        public TViewModel GetSingle(Expression<Func<TEntity, bool>> filterExpression, bool disableTracking = true)
+        {
+            var query = _repository.GetSingle(filterExpression, disableTracking);
+            return _mapper.Map<TViewModel>(query);
+        }
+
         public Task<bool> IsExist(Expression<Func<TEntity, bool>> filterExpression)
         {
             return _repository.IsExist(filterExpression);
         }
 
-        public async Task<bool> Edit(TViewModel entityModel)
+        public bool Edit(TViewModel entityModel)
         {
             var entity = _mapper.Map<TEntity>(entityModel);
-            return await _repository.Edit(entity);
+            return _repository.Edit(entity);
         }
 
-        public async Task<bool> Delete(TViewModel entityModel)
+        public bool Delete(TViewModel entityModel)
         {
             var entity = _mapper.Map<TEntity>(entityModel);
-            return await _repository.Delete(entity);
+            return _repository.Delete(entity);
         }
 
         public async Task<bool> DeleteById(object id)

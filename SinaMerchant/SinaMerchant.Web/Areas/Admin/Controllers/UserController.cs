@@ -118,7 +118,7 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var user = await _userService.Entities.AsNoTracking().SingleOrDefaultAsync(u => u.Id == id);
+            var user = await _userService.Entities.AsQueryable().AsNoTracking().SingleOrDefaultAsync(u => u.Id == id);
             if (user == null) return NotFound();
             userViewModel.EmailActiveCode = user.EmailActiveCode;
             userViewModel.Password = _passwordHelper.HashPassword(userViewModel.Password);
@@ -127,7 +127,7 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
             {
                 try
                 {
-                    var success = await _userService.Edit(userViewModel);
+                    var success = _userService.Edit(userViewModel);
                     if (success) TempData["SuccessMessage"] = "Succesfully Edited.";
                 }
                 catch (DbUpdateConcurrencyException)
@@ -174,7 +174,7 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.SiteUsers' is null.");
             }
-            
+
             var success = await _userService.DeleteById(id);
             if (success) TempData["SuccessMessage"] = "Succesfully deleted.";
 

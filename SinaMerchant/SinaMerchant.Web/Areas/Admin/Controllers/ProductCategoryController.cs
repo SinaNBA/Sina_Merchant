@@ -22,7 +22,7 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         // GET: ProductCategoryController
         public async Task<ActionResult> Index()
         {
-            var list = await _CategoryService.Entities.Where(p => p.ParentId == null).ToListAsync();
+            var list = await _CategoryService.GetAll();            
             return View(list);
         }
 
@@ -35,16 +35,24 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         // GET: ProductCategoryController/Create
         public ActionResult Create()
         {
+            var list = _CategoryService.Entities.Where(p => p.ParentId == null).ToList();
+            ViewBag.Categories = list;
             return View();
         }
 
         // POST: ProductCategoryController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(ProductCategoryViewModel productCategory)
         {
             try
             {
+                if (!ModelState.IsValid) return View(productCategory);
+
+                // add productCategory to database
+                var success = await _CategoryService.InsertAsync(productCategory);
+                if (success) TempData["SuccessMessage"] = "Succesfully Added.";
+
                 return RedirectToAction(nameof(Index));
             }
             catch

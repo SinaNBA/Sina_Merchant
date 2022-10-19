@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SinaMerchant.Web.Data.Context;
-using SinaMerchant.Web.Data;
 using SinaMerchant.Web.Repositories;
 using SinaMerchant.Web.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -11,7 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-builder.Services.AddAutoMapper(typeof(Program));
 
 // Config DbContext
 #region Db Context
@@ -23,6 +21,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Add Repos to the DI container
 #region IoC
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddScoped(typeof(IRepository<>), typeof(ShopRepository<>));
 builder.Services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>));
 builder.Services.AddScoped<IPasswordHelper, MD5PasswordHelper>();
