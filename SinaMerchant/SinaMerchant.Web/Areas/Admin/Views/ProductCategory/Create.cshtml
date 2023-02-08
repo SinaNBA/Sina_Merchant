@@ -3,39 +3,39 @@
 @{
     ViewData["Title"] = "Create";
 }
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/Categories.js"></script>
 
-<h1>Create</h1>
+        }
 
-<h4>ProductCategory</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @if (ViewBag.Categories !=null)
+    <h1>Create</h1>
+
+    <h4>ProductCategory</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @if (ViewBag.Categories != null)
             {
                 <div class="form-group">
-                <label class="control-label">Category</label>
-                    <select asp-for="ParentId" asp-items="@(new SelectList(ViewBag.Categories,nameof(ViewBag.Categories.Id),nameof(ViewBag.Categories.Name)))">
+                    <label class="control-label">Category</label>
+                    <select id="parents" asp-items="@(new SelectList(ViewBag.Categories,nameof(ViewBag.Categories.Id),nameof(ViewBag.Categories.Name)))">
                         <option>Please select a category(or leave it empty)</option>
-                        @*@foreach (var item in ViewBag.Categories)
-                        {
-                            <option asp-for="ParentId" value="@item.Id">@item.Name</option>
-                        }*@
+                    </select>                    
                     
-                </select>
-                @*<input  asp-for="ParentId" class="form-control" />
-                <span asp-validation-for="ParentId" class="text-danger"></span>*@
-            </div>
+                    <div id="subCat"></div>
+                </div>
             }
-            
+
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input id="submit" type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -45,6 +45,4 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+

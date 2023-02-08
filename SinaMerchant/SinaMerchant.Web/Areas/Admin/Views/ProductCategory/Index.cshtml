@@ -56,7 +56,7 @@
                 @Html.DisplayNameFor(model => model.ParentId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ParentName)
+                ParentName
             </th>
             <th></th>
         </tr>
@@ -74,14 +74,15 @@
                         @Html.DisplayFor(modelItem => item.ParentId)
                     </td>
                     <td>
-                        @if (item.ParentId != null)
-                        {
+
+                        @{
+                            var ParentName = string.Empty;
                             foreach (var category in Model)
                             {
-                                if (item.ParentId == category.Id) item.ParentName = category.Name;
+                                if (item.ParentId == category.Id) ParentName = category.Name;
                             }
                         }
-                        @Html.DisplayFor(modelItem => item.ParentName)
+                        @Html.Raw(ParentName)
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

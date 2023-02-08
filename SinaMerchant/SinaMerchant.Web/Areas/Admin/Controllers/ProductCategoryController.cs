@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Protocol;
 using SinaMerchant.Web.Entities;
 using SinaMerchant.Web.Models.ViewModels;
 using SinaMerchant.Web.Services;
@@ -20,30 +21,31 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         #endregion
 
         // GET: ProductCategoryController
-        public async Task<ActionResult> Index()
+        public async Task<IActionResult> Index()
         {
-            var list = await _CategoryService.GetAll();            
+            var list = await _CategoryService.GetAll();
             return View(list);
         }
 
         // GET: ProductCategoryController/Details/5
-        public ActionResult Details(int id)
+        public IActionResult Details(int id)
         {
             return View();
         }
 
         // GET: ProductCategoryController/Create
-        public ActionResult Create()
+        public IActionResult Create()
         {
             var list = _CategoryService.Entities.Where(p => p.ParentId == null).ToList();
             ViewBag.Categories = list;
+
             return View();
         }
 
         // POST: ProductCategoryController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(ProductCategoryViewModel productCategory)
+        public async Task<IActionResult> Create(ProductCategoryViewModel productCategory)
         {
             try
             {
@@ -62,7 +64,7 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         }
 
         // GET: ProductCategoryController/Edit/5
-        public ActionResult Edit(int id)
+        public IActionResult Edit(int id)
         {
             return View();
         }
@@ -70,7 +72,7 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         // POST: ProductCategoryController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public IActionResult Edit(int id, IFormCollection collection)
         {
             try
             {
@@ -83,7 +85,7 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         }
 
         // GET: ProductCategoryController/Delete/5
-        public ActionResult Delete(int id)
+        public IActionResult Delete(int id)
         {
             return View();
         }
@@ -91,7 +93,7 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         // POST: ProductCategoryController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public IActionResult Delete(int id, IFormCollection collection)
         {
             try
             {
@@ -101,6 +103,17 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
             {
                 return View();
             }
+        }
+
+        public IActionResult? GetParents(int parentId)
+        {
+            var list = _CategoryService.Entities.Where(x => x.ParentId == parentId).ToList();
+            if (!list.Any())
+            {
+                return null;
+            }
+            ViewBag.ChildCategories = list;
+            return ViewComponent("Category");
         }
     }
 }

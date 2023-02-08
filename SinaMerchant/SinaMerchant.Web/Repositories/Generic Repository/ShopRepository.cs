@@ -17,6 +17,8 @@ namespace SinaMerchant.Web.Repositories
 
         public IQueryable<TEntity> Entities => _entities;
 
+        public DbSet<TEntity> DbSet => _entities;
+
         public async Task<bool> InsertAsync(TEntity entity)
         {
             await _entities.AddAsync(entity);

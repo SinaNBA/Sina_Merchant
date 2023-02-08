@@ -20,6 +20,7 @@ namespace SinaMerchant.Web.Repositories
         void Save();
 
         IQueryable<TEntity> Entities { get; }
+        DbSet<TEntity> DbSet { get; }
 
 
     }

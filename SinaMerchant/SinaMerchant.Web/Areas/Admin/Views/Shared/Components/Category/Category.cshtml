@@ -1,0 +1,8 @@
+﻿@model ProductCategoryViewModel
+
+<div class="form-group">
+    <label class="control-label">SubCategory</label>
+    <select id="childs" asp-for="ParentId" asp-items="@(new SelectList(ViewBag.ChildCategories,nameof(ViewBag.ChildCategories.Id),nameof(ViewBag.ChildCategories.Name)))">
+        <option disabled selected> -- select an option -- </option>
+    </select>
+</div>

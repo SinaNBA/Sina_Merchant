@@ -19,6 +19,7 @@ namespace SinaMerchant.Web.Services
 
         public IEnumerable<TViewModel> Entities => _mapper.Map<IEnumerable<TViewModel>>(_repository.Entities);
 
+        public DbSet<TEntity> EntitiesSet => _repository.DbSet;
 
         public async Task<bool> InsertAsync(TViewModel entityModel)
         {

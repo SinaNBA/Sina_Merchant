@@ -18,5 +18,6 @@ namespace SinaMerchant.Web.Services
         Task<bool> DeleteById(object id);
 
         IEnumerable<TViewModel> Entities { get; }
+        DbSet<TEntity> EntitiesSet { get; }
     }
 }
