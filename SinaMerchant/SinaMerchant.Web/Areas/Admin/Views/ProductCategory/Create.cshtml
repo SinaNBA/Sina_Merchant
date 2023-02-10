@@ -23,9 +23,10 @@
                     <label class="control-label">Category</label>
                     <select id="parents" asp-items="@(new SelectList(ViewBag.Categories,nameof(ViewBag.Categories.Id),nameof(ViewBag.Categories.Name)))">
                         <option>Please select a category(or leave it empty)</option>
-                    </select>                    
-                    
-                    <div id="subCat"></div>
+                    </select>
+
+                    <label class="control-label">SubCategories</label>
+                    <div id="subCat" class="form-group"></div>
                 </div>
             }
 
