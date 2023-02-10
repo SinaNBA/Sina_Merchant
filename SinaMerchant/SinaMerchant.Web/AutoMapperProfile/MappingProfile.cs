@@ -2,12 +2,13 @@
 using SinaMerchant.Web.Entities;
 using SinaMerchant.Web.Models.ViewModels;
 
-namespace SinaMerchant.Web.AutoMapperProfile
+namespace SinaMerchant.Web
 {
     public class MappingProfile : Profile
     {
         public MappingProfile()
         {
+
             CreateMap<User, UserAddEditViewModel>().ReverseMap();
             CreateMap<User, RegisterViewModel>().ReverseMap();
             CreateMap<IQueryable<User>, IQueryable<RegisterViewModel>>().ReverseMap();
@@ -15,6 +16,7 @@ namespace SinaMerchant.Web.AutoMapperProfile
             CreateMap<ShopOrder, ShopOrderViewModel>().ReverseMap();
             CreateMap<Product, ProductViewModel>().ReverseMap();
             CreateMap<ProductCategory, ProductCategoryViewModel>().ReverseMap();
+            CreateMap<IQueryable<ProductCategory>, IQueryable<ProductCategoryViewModel>>().ReverseMap();
             CreateMap<ProductConfig, ProductConfigViewModel>().ReverseMap();
             CreateMap<ProductItem, ProductItemViewModel>().ReverseMap();
             CreateMap<Variation, VariationViewModel>().ReverseMap();

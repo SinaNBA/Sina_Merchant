@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SinaMerchant.Web.Entities;
 using System.Runtime.CompilerServices;
+using SinaMerchant.Web.Models.ViewModels;
 
 namespace SinaMerchant.Web.Data.Context
 {
@@ -20,6 +21,7 @@ namespace SinaMerchant.Web.Data.Context
         public DbSet<VariationOption> VariationOptions { get; set; }
         #endregion
 
+        #region Fluent API
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>(x =>
@@ -111,5 +113,11 @@ namespace SinaMerchant.Web.Data.Context
             base.OnModelCreating(modelBuilder);
 
         }
+        #endregion
+
+        #region Fluent API
+        public DbSet<SinaMerchant.Web.Models.ViewModels.ProductCategoryViewModel> ProductCategoryViewModel { get; set; }
+        #endregion
+
     }
 }

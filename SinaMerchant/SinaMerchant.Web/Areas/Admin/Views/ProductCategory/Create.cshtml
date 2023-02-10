@@ -1,0 +1,49 @@
+﻿@model ProductCategoryViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/Categories.js"></script>
+
+        }
+
+    <h1>Create</h1>
+
+    <h4>ProductCategory</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            @if (ViewBag.Categories != null)
+            {
+                <div class="form-group">
+                    <label class="control-label">Category</label>
+                    <select id="parents" asp-items="@(new SelectList(ViewBag.Categories,nameof(ViewBag.Categories.Id),nameof(ViewBag.Categories.Name)))">
+                        <option>Please select a category(or leave it empty)</option>
+                    </select>
+
+                    <label class="control-label">SubCategories</label>
+                    <div id="subCat" class="form-group"></div>
+                </div>
+            }
+
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input id="submit" type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+

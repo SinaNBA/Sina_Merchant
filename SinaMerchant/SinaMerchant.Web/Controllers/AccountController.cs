@@ -87,13 +87,12 @@ namespace SinaMerchant.Web.Controllers
         [HttpGet("activate-account/{emailActiveCode}")]
         public async Task<IActionResult> ActivateAccount(string emailActiveCode)
         {
-            var user = await _userService.Entities.AsNoTracking().SingleOrDefaultAsync(u => u.EmailActiveCode == emailActiveCode);
+            var user = _userService.GetSingle(u => u.EmailActiveCode == emailActiveCode,true);
             if (user != null)
             {
                 user.IsActive = true;
                 user.EmailActiveCode = Guid.NewGuid().ToString("N");
-                var userViewModel = _mapper.Map<RegisterViewModel>(user);
-                var success = await _userService.Edit(userViewModel);
+                var success = _userService.Edit(user);
                 if (success) return RedirectToAction("Login");
             }
 
@@ -185,7 +184,7 @@ namespace SinaMerchant.Web.Controllers
             {
 
 
-                var user = await _userService.Entities.SingleOrDefaultAsync(u => u.Email == forgotPass.Email.Trim().ToLower());
+                var user = await _userService.Entities.AsQueryable().SingleOrDefaultAsync(u => u.Email == forgotPass.Email.Trim().ToLower());
                 if (user != null)
                 {
                     var domainName = _configuration.GetValue<string>("DomainName");
@@ -213,7 +212,7 @@ namespace SinaMerchant.Web.Controllers
         [HttpGet("reset-pass/{emailActiveCode}")]
         public async Task<IActionResult> ResetPassword(string emailActiveCode)
         {
-            var user = await _userService.Entities.SingleOrDefaultAsync(u => u.EmailActiveCode == emailActiveCode);
+            var user = await _userService.Entities.AsQueryable().SingleOrDefaultAsync(u => u.EmailActiveCode == emailActiveCode);
 
             if (user == null) return NotFound();
 
@@ -225,14 +224,15 @@ namespace SinaMerchant.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userService.Entities.AsNoTracking().SingleOrDefaultAsync(u => u.EmailActiveCode == emailActiveCode);
+                //var user = _userService.Entities.AsQueryable().SingleOrDefault(u => u.EmailActiveCode == emailActiveCode);
+                var user = _userService.GetSingle(u => u.EmailActiveCode == emailActiveCode, true);
                 if (user == null) return NotFound();
 
                 user.Password = _passwordHelper.HashPassword(resetPass.Password);
                 user.EmailActiveCode = Guid.NewGuid().ToString("N");
                 user.IsActive = true;
-                var userViewModel = _mapper.Map<RegisterViewModel>(user);
-                var success = await _userService.Edit(userViewModel);
+                //var userViewModel = _mapper.Map<RegisterViewModel>(user);
+                var success = _userService.Edit(user);
                 TempData["SuccessMessage"] = "Reset successfully.";
                 if (success) return RedirectToAction("Login");
 

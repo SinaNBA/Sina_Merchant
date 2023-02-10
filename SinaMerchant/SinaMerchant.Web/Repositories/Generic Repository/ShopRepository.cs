@@ -17,10 +17,12 @@ namespace SinaMerchant.Web.Repositories
 
         public IQueryable<TEntity> Entities => _entities;
 
+        public DbSet<TEntity> DbSet => _entities;
+
         public async Task<bool> InsertAsync(TEntity entity)
         {
             await _entities.AddAsync(entity);
-            await Save();
+            Save();
             return true;
         }
 
@@ -51,38 +53,47 @@ namespace SinaMerchant.Web.Repositories
             return await _entities.SingleOrDefaultAsync(filterExpression);
         }
 
+        public TEntity GetSingle(Expression<Func<TEntity, bool>> filterExpression, bool disableTracking = true)
+        {
+            IQueryable<TEntity> query = _entities;
+            if (disableTracking) query = query.AsNoTracking();
+            return query.SingleOrDefault(filterExpression);
+        }
+
         public async Task<bool> IsExist(Expression<Func<TEntity, bool>> filterExpression)
         {
             return await _entities.AnyAsync(filterExpression);
         }
 
-        public async Task<bool> Edit(TEntity entity)
+        public bool Edit(TEntity entity)
         {
+            //if (_context.Entry(entity).State == EntityState.Added) _context.Attach(entity);
+
             _context.Update(entity);
-            await Save();
+            Save();
             return true;
         }
 
-        public async Task<bool> Delete(TEntity entity)
+        public bool Delete(TEntity entity)
         {
-            if (_context.Entry(entity).State == EntityState.Detached)
-            {
-                _context.Attach(entity);
-            }
+            //if (_context.Entry(entity).State == EntityState.Detached)
+            //{
+            //    _context.Attach(entity);
+            //}
             _entities.Remove(entity);
-            await Save();
+            Save();
             return true;
         }
 
         public async Task<bool> DeleteById(object id)
         {
             var entity = await GetById(id);
-            return await Delete(entity);
+            return Delete(entity);
         }
 
-        public async Task Save()
+        public void Save()
         {
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
 
         public void Dispose()

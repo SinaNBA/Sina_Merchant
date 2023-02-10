@@ -1,0 +1,6 @@
+﻿@model ProductCategoryViewModel
+
+
+<select style="display:block" id="childs" asp-for="ParentId" asp-items="@(new SelectList(ViewBag.ChildCategories,nameof(ViewBag.ChildCategories.Id),nameof(ViewBag.ChildCategories.Name)))">
+    <option value="none" selected> -- select an option -- </option>
+</select>

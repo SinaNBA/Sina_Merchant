@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using NuGet.Protocol.Core.Types;
-using SinaMerchant.Web.Data;
 using SinaMerchant.Web.Entities;
 using SinaMerchant.Web.Models.ViewModels;
 using SinaMerchant.Web.Services;
@@ -17,19 +17,25 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
 {
     public class UserController : AdminBaseController
     {
-        private readonly IGenericService<User, UserAddEditViewModel> _genericService;
+        #region Constructor
+        private readonly IGenericService<User, UserAddEditViewModel> _userService;
         private readonly IPasswordHelper _passwordHelper;
+        private readonly IMapper _mapper;
 
-        public UserController(IGenericService<User, UserAddEditViewModel> genericService, IPasswordHelper passwordHelper)
+        public UserController(IGenericService<User, UserAddEditViewModel> userService,
+            IPasswordHelper passwordHelper, IMapper mapper)
         {
-            _genericService = genericService;
+            _userService = userService;
             _passwordHelper = passwordHelper;
+            _mapper = mapper;
         }
+        #endregion
 
+        #region Get Users
         // GET: User        
         public async Task<IActionResult> Index()
         {
-            return View(await _genericService.GetAll());
+            return View(await _userService.GetAll());
         }
 
         // GET: User/Details/5        
@@ -37,7 +43,7 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         {
             if (id != null)
             {
-                var User = await _genericService.GetById(id);
+                var User = await _userService.GetById(id);
                 if (User == null) return NotFound();
                 return View(User);
             }
@@ -46,6 +52,7 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
                 return NotFound();
             }
         }
+        #endregion
 
         #region Create
         // GET: User/Create        
@@ -57,14 +64,15 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         // POST: User/Create        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Email, Password,FName,LName,Address,City,PostalCode,Country,Phone")] UserAddEditViewModel user)
+        public async Task<IActionResult> Create(UserAddEditViewModel user)
         {
-            if (!ModelState.IsValid) return View(user);            
+            if (!ModelState.IsValid) return View(user);
 
             // add user to database
             user.Email = user.Email.ToLower().Trim();
             user.Password = _passwordHelper.HashPassword(user.Password);
-            var success = await _genericService.InsertAsync(user);
+            user.EmailActiveCode = Guid.NewGuid().ToString("N");
+            var success = await _userService.InsertAsync(user);
             if (success) TempData["SuccessMessage"] = "Succesfully Added.";
             return RedirectToAction(nameof(Index));
         }
@@ -72,7 +80,7 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         // check user is exists or not
         public async Task<IActionResult> VerifyEmail(string email)
         {
-            if (await _genericService.IsExist(x => x.Email == email.ToLower().Trim()))
+            if (await _userService.IsExist(x => x.Email == email.ToLower().Trim()))
             {
                 return Json($"A user with email {email} has already registered");
             }
@@ -80,6 +88,7 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         }
         #endregion
 
+        #region Edit
         // GET: User/Edit/5        
         public async Task<IActionResult> Edit(int? id)
         {
@@ -88,8 +97,8 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            
-            var User = await _genericService.GetById(id);
+
+            var User = await _userService.GetById(id);
             // check user is exists or not
             if (User == null)
             {
@@ -102,23 +111,28 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         // POST: User/Edit/5        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, UserAddEditViewModel User)
+        public async Task<IActionResult> Edit(int id, UserAddEditViewModel userViewModel)
         {
-            if (id != User.Id)
+            if (id != userViewModel.Id)
             {
                 return NotFound();
             }
+
+            var user = await _userService.Entities.AsQueryable().AsNoTracking().SingleOrDefaultAsync(u => u.Id == id);
+            if (user == null) return NotFound();
+            userViewModel.EmailActiveCode = user.EmailActiveCode;
+            userViewModel.Password = _passwordHelper.HashPassword(userViewModel.Password);
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var success = await _genericService.Edit(User);
+                    var success = _userService.Edit(userViewModel);
                     if (success) TempData["SuccessMessage"] = "Succesfully Edited.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(User.Id))
+                    if (!UserExists(userViewModel.Id))
                     {
                         return NotFound();
                     }
@@ -129,9 +143,11 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(User);
+            return View(userViewModel);
         }
+        #endregion
 
+        #region Delete
         // GET: User/Delete/5        
         public async Task<IActionResult> Delete(int? id)
         {
@@ -140,7 +156,7 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var User = await _genericService.GetById(id);
+            var User = await _userService.GetById(id);
             if (User == null)
             {
                 return NotFound();
@@ -154,20 +170,21 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_genericService.GetAll() == null)
+            if (_userService.GetAll() == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.SiteUsers'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.SiteUsers' is null.");
             }
 
-            var success = await _genericService.DeleteById(id);
+            var success = await _userService.DeleteById(id);
             if (success) TempData["SuccessMessage"] = "Succesfully deleted.";
 
             return RedirectToAction(nameof(Index));
         }
+        #endregion
 
         private bool UserExists(int id)
         {
-            var User = _genericService.GetById(id);
+            var User = _userService.GetById(id);
             return User.Result != null;
         }
     }

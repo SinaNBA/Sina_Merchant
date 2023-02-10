@@ -12,13 +12,15 @@ namespace SinaMerchant.Web.Repositories
         ICollection<TEntity>? Filter(Expression<Func<TEntity, bool>> filterExpression);
         Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> filterExpression);
         Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> filterExpression);
+        TEntity GetSingle(Expression<Func<TEntity, bool>> filterExpression, bool disableTracking);
         Task<bool> IsExist(Expression<Func<TEntity, bool>> filterExpression);
-        Task<bool> Edit(TEntity entity);
-        Task<bool> Delete(TEntity entity);
+        bool Edit(TEntity entity);
+        bool Delete(TEntity entity);
         Task<bool> DeleteById(object id);
-        Task Save();
+        void Save();
 
         IQueryable<TEntity> Entities { get; }
+        DbSet<TEntity> DbSet { get; }
 
 
     }
