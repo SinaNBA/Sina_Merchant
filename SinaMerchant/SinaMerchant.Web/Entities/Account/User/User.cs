@@ -20,6 +20,12 @@ namespace SinaMerchant.Web.Entities
         public bool IsAdmin { get; set; }
         public DateTime RegisterDate { get; set; }
 
+        #region Relations
+
         public ICollection<ShopOrder>? ShopOrders { get; set; }
+        public ICollection<UserRole> UserRoles { get; set; }
+
+        #endregion
+
     }
 }
