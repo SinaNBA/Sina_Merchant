@@ -82,8 +82,6 @@ namespace SinaMerchant.Web.Controllers
             return View(sendEmail);
         }
 
-        //public IActionResult SendEmail()
-
         [HttpGet("activate-account/{emailActiveCode}")]
         public async Task<IActionResult> ActivateAccount(string emailActiveCode)
         {

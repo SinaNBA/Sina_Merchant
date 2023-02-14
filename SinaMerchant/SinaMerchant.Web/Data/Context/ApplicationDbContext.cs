@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SinaMerchant.Web.Entities;
-using System.Runtime.CompilerServices;
-using SinaMerchant.Web.Models.ViewModels;
 
 namespace SinaMerchant.Web.Data.Context
 {
@@ -11,6 +9,8 @@ namespace SinaMerchant.Web.Data.Context
 
         #region DbSets
         public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<ShopOrder> ShopOrders { get; set; }
         public DbSet<Product> Products { get; set; }
@@ -38,6 +38,21 @@ namespace SinaMerchant.Web.Data.Context
                 x.Property(x => x.Phone).HasMaxLength(50);
                 x.Property(x => x.EmailActiveCode).HasMaxLength(200);
                 x.HasMany(x => x.ShopOrders).WithOne(x => x.User);
+                x.HasMany(x => x.UserRoles).WithOne(x => x.User);
+            });
+
+            modelBuilder.Entity<Role>(x =>
+            {
+                x.HasKey(x => x.Id);
+                x.Property(x => x.RoleTitle).HasMaxLength(200);
+                x.HasMany(x => x.UserRoles).WithOne(x => x.Role);
+            });
+
+            modelBuilder.Entity<UserRole>(x =>
+            {
+                x.HasKey(x => x.Id);
+                x.HasOne(x => x.User).WithMany(x => x.UserRoles).HasForeignKey(x => x.UserId);
+                x.HasOne(x => x.Role).WithMany(x => x.UserRoles).HasForeignKey(x => x.RoleId);
             });
 
             modelBuilder.Entity<OrderDetail>(x =>
@@ -113,10 +128,6 @@ namespace SinaMerchant.Web.Data.Context
             base.OnModelCreating(modelBuilder);
 
         }
-        #endregion
-
-        #region Fluent API
-        public DbSet<SinaMerchant.Web.Models.ViewModels.ProductCategoryViewModel> ProductCategoryViewModel { get; set; }
         #endregion
 
     }
