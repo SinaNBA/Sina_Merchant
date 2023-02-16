@@ -49,6 +49,7 @@ namespace SinaMerchant.Web.Controllers
             register.Email = register.Email.ToLower().Trim();
             register.Password = _passwordHelper.HashPassword(register.Password);
             register.EmailActiveCode = Guid.NewGuid().ToString("N");
+            register.RegisterDate = DateTime.Now;
             await _userService.InsertAsync(register);
 
 
@@ -65,7 +66,7 @@ namespace SinaMerchant.Web.Controllers
             return RedirectToAction("SendEmail", sendMail);
         }
 
-        // check user is exists or not through remote attribute in RegisterViewModel
+        // check user is exists or not, through remote attribute in RegisterViewModel
         public async Task<IActionResult> VerifyEmail(string email)
         {
             if (await _userService.IsExist(x => x.Email == email.ToLower().Trim()))
@@ -83,15 +84,19 @@ namespace SinaMerchant.Web.Controllers
         }
 
         [HttpGet("activate-account/{emailActiveCode}")]
-        public async Task<IActionResult> ActivateAccount(string emailActiveCode)
+        public IActionResult ActivateAccount(string emailActiveCode)
         {
-            var user = _userService.GetSingle(u => u.EmailActiveCode == emailActiveCode,true);
-            if (user != null)
+            var user = _userService.GetSingle(u => u.EmailActiveCode == emailActiveCode, true);
+            if (user != null && !user.IsActive)
             {
                 user.IsActive = true;
                 user.EmailActiveCode = Guid.NewGuid().ToString("N");
                 var success = _userService.Edit(user);
-                if (success) return RedirectToAction("Login");
+                if (success)
+                {
+                    TempData["SuccessMessage"] = "Your account has been successfully activated!";
+                    return RedirectToAction("Login");
+                }
             }
 
             // block ip
