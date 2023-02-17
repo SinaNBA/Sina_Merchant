@@ -21,7 +21,7 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <div class="d-flex">
-                        <a class="pe-5 nav-link text-white-50" asp-area="UserPanel" asp-controller="Home" asp-action="Index">Welcome @User.Identity.Name</a>
+                        <a class="pe-5 nav-link text-white-50">Welcome @User.Identity.Name</a>
                     </div>
                     <div class="d-flex">
                         <a class="pe-5 nav-link text-white-50" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>

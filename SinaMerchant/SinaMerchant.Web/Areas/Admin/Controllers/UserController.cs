@@ -117,7 +117,7 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-
+            //TODO Fix Edit Action for User
             var user = await _userService.Entities.AsQueryable().AsNoTracking().SingleOrDefaultAsync(u => u.Id == id);
             if (user == null) return NotFound();
             userViewModel.EmailActiveCode = user.EmailActiveCode;

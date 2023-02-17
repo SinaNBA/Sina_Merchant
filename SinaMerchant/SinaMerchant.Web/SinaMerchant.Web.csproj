@@ -11,9 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="12.0.0" />
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
-    <PackageReference Include="jQuery" Version="3.6.0" />
+    <PackageReference Include="jQuery" Version="3.6.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="6.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.10">
@@ -26,17 +26,15 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
-    <PackageReference Include="NLog" Version="5.0.5" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="5.1.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.12" />
+    <PackageReference Include="NLog" Version="5.1.1" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.2.1" />
 	  <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
-	  <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+	  <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
 	  <PackageReference Include="WebSharper.JQueryUI" Version="4.7.2.181" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\Data\" />
-    <Folder Include="Areas\Admin\ViewComponents\" />
     <Folder Include="wwwroot\Logs\" />
   </ItemGroup>
 
