@@ -84,25 +84,27 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
             }
         }
 
-        // GET: ProductCategoryController/Delete/5
-        public IActionResult Delete(int id)
+        // GET: ProductCategoryController/Delete/5      
+        public IActionResult? Delete(int id)
         {
-            return View();
-        }
+            var category = _CategoryService.GetSingle(c => c.Id == id, true);
 
-        // POST: ProductCategoryController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id, IFormCollection collection)
-        {
-            try
+            if (category != null)
             {
-                return RedirectToAction(nameof(Index));
+                var result = _CategoryService.Delete(category);
+                if (result)
+                {
+                    return Json(new
+                    {
+                        status = "Success"
+                    });
+                }
+
             }
-            catch
+            return Json(new
             {
-                return View();
-            }
+                status = "NotFound"
+            });
         }
 
         public IActionResult? GetParents(int parentId)

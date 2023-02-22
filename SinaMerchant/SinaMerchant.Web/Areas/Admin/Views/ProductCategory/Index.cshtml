@@ -12,6 +12,13 @@
     </div>
 }
 
+@section Scripts
+    {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/Admin/js/ProductCategoryRemove.js"></script>
+}
+
 <p>
     <a asp-action="Create">Create New</a>
 </p>
@@ -22,7 +29,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Name)
             </th>
-            <th></th>
+            <th>Commands</th>
         </tr>
     </thead>
     <tbody>
@@ -30,14 +37,14 @@
         {
             if (item.ParentId == null)
             {
-                <tr>
+                <tr id="category-@item.Id">
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                         <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a class="btn btn-sm btn-danger">Delete</a>
                     </td>
                 </tr>
             }
@@ -55,10 +62,8 @@
             <th>
                 @Html.DisplayNameFor(model => model.ParentId)
             </th>
-            <th>
-                ParentName
-            </th>
-            <th></th>
+            <th>ParentName</th>
+            <th>Commands</th>
         </tr>
     </thead>
     <tbody>
@@ -66,7 +71,7 @@
         {
             if (item.ParentId != null)
             {
-                <tr>
+                <tr id="category-@item.Id">
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
@@ -87,7 +92,7 @@
                     <td>
                         <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                         <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        <a class="btn btn-sm btn-danger" onclick="RemoveCategory(@item.Id)">Delete</a>
                     </td>
                 </tr>
             }
