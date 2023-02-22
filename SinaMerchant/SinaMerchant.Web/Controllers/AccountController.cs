@@ -129,12 +129,13 @@ namespace SinaMerchant.Web.Controllers
                 {
                     if (user.IsActive)
                     {
+                        //var userRole = _userService.EntitiesSet.Include(u=> u.UserRoles.Where(x=>x.UserId==user.Id)).ThenInclude(u=>u.Role).ToList();
 
                         // set user claims
                         var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Email)
+                new Claim(ClaimTypes.Name, user.Email),
             };
                         // Identity
                         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
