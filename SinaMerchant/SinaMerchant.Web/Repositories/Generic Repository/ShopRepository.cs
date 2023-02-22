@@ -93,7 +93,15 @@ namespace SinaMerchant.Web.Repositories
 
         public void Save()
         {
-            _context.SaveChanges();
+            try
+            {
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
         }
 
         public void Dispose()

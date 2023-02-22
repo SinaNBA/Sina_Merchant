@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using NuGet.Protocol;
+﻿using Microsoft.AspNetCore.Mvc;
 using SinaMerchant.Web.Entities;
 using SinaMerchant.Web.Models.ViewModels;
 using SinaMerchant.Web.Services;
@@ -28,9 +25,18 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         }
 
         // GET: ProductCategoryController/Details/5
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int? id)
         {
-            return View();
+            if (id != null)
+            {
+                var Category = await _CategoryService.GetById(id);
+                if (Category == null) return NotFound();
+                return View(Category);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         // GET: ProductCategoryController/Create
@@ -64,18 +70,36 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         }
 
         // GET: ProductCategoryController/Edit/5
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            return View();
+            if (id != null)
+            {
+                var Category = await _CategoryService.GetById(id);
+                if (Category == null) return NotFound();
+                return View(Category);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         // POST: ProductCategoryController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, IFormCollection collection)
+        public IActionResult Edit(int id, ProductCategoryViewModel productCategory)
         {
             try
             {
+                if (id != productCategory.Id)
+                {
+                    return NotFound();
+                }
+                if (!ModelState.IsValid) return View(productCategory);
+
+                var result = _CategoryService.Edit(productCategory);
+                if (result) TempData["SuccessMessage"] = "Succesfully Edited.";
+
                 return RedirectToAction(nameof(Index));
             }
             catch
