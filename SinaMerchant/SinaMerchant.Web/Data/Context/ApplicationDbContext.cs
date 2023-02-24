@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SinaMerchant.Web.Entities;
-using SinaMerchant.Web.Models.ViewModels;
 
 namespace SinaMerchant.Web.Data.Context
 {
@@ -9,9 +8,13 @@ namespace SinaMerchant.Web.Data.Context
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { }
 
         #region DbSets
+        #region Account
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<RolePermission> RolePermissions { get; set; }
+        #endregion
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<ShopOrder> ShopOrders { get; set; }
         public DbSet<Product> Products { get; set; }
@@ -45,8 +48,9 @@ namespace SinaMerchant.Web.Data.Context
             modelBuilder.Entity<Role>(x =>
             {
                 x.HasKey(x => x.Id);
-                x.Property(x => x.RoleTitle).HasMaxLength(200);
+                x.Property(x => x.Title).HasMaxLength(200);
                 x.HasMany(x => x.UserRoles).WithOne(x => x.Role);
+                x.HasMany(x => x.RolePermissions).WithOne(x => x.Role);
             });
 
             modelBuilder.Entity<UserRole>(x =>
@@ -54,6 +58,19 @@ namespace SinaMerchant.Web.Data.Context
                 x.HasKey(x => x.Id);
                 x.HasOne(x => x.User).WithMany(x => x.UserRoles).HasForeignKey(x => x.UserId);
                 x.HasOne(x => x.Role).WithMany(x => x.UserRoles).HasForeignKey(x => x.RoleId);
+            });
+
+            modelBuilder.Entity<Permission>(x =>
+            {
+                x.HasKey(x => x.Id);
+                x.HasMany(x => x.RolePermissions).WithOne(x => x.Permission);
+            });
+
+            modelBuilder.Entity<RolePermission>(x =>
+            {
+                x.HasKey(x => x.Id);
+                x.HasOne(x => x.Role).WithMany(x => x.RolePermissions).HasForeignKey(x => x.RoleId);
+                x.HasOne(x => x.Permission).WithMany(x => x.RolePermissions).HasForeignKey(x => x.PermissionId);
             });
 
             modelBuilder.Entity<OrderDetail>(x =>
@@ -130,10 +147,5 @@ namespace SinaMerchant.Web.Data.Context
 
         }
         #endregion
-
-        #region Fluent API
-        public DbSet<SinaMerchant.Web.Models.ViewModels.ProductCategoryViewModel> ProductCategoryViewModel { get; set; }
-        #endregion
-
     }
 }

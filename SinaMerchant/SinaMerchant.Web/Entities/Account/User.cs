@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace SinaMerchant.Web.Entities
+﻿namespace SinaMerchant.Web.Entities
 {
     // site's user or customer's table
     public class User

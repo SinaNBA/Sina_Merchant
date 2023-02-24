@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SinaMerchant.Web.Entities;
+using SinaMerchant.Web.HttpExtentions;
 using SinaMerchant.Web.Models.ViewModels;
 using SinaMerchant.Web.Services;
 
 namespace SinaMerchant.Web.Areas.Admin.Controllers
 {
+    [PermissionChecker("UserManagement")]
     public class UserController : AdminBaseController
     {
         #region Constructor
@@ -25,8 +27,16 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
 
         #region Get Users
         // GET: User        
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(bool admin)
         {
+            if (admin)
+            {
+                var adminList = _userService.Filter(u => u.IsAdmin);
+                if (adminList != null)
+                {
+                    return View(adminList.ToList());
+                }
+            }
             return View(await _userService.GetAll());
         }
 

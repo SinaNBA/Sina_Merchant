@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SinaMerchant.Web.Entities;
+using SinaMerchant.Web.HttpExtentions;
 using SinaMerchant.Web.Models.ViewModels;
 using SinaMerchant.Web.Services;
 
 namespace SinaMerchant.Web.Areas.Admin.Controllers
 {
+    [PermissionChecker("ProductManagement")]
     public class ProductCategoryController : AdminBaseController
     {
         #region Constructor
