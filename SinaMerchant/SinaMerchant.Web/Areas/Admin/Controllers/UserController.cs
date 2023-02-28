@@ -12,11 +12,11 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
     public class UserController : AdminBaseController
     {
         #region Constructor
-        private readonly IGenericService<User, UserAddEditViewModel> _userService;
+        private readonly IUserService<UserAddEditViewModel> _userService;
         private readonly IPasswordHelper _passwordHelper;
         private readonly IMapper _mapper;
 
-        public UserController(IGenericService<User, UserAddEditViewModel> userService,
+        public UserController(IUserService<UserAddEditViewModel> userService,
             IPasswordHelper passwordHelper, IMapper mapper)
         {
             _userService = userService;
@@ -75,7 +75,7 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
             user.Email = user.Email.ToLower().Trim();
             user.Password = _passwordHelper.HashPassword(user.Password);
             user.EmailActiveCode = Guid.NewGuid().ToString("N");
-            var success = await _userService.InsertAsync(user);
+            var success = _userService.Insert(user);
             if (success) TempData["SuccessMessage"] = "Succesfully Added.";
             return RedirectToAction(nameof(Index));
         }
@@ -83,10 +83,10 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         // check user is exists or not
         public async Task<IActionResult> VerifyEmail(string email, string pageMode)
         {
-            //if ((await _userService.IsExist(x => x.Email == email.ToLower().Trim())) && pageMode == "Create")
-            //{
+            if ((await _userService.IsExist(x => x.Email == email.ToLower().Trim())) && pageMode == "Create")
+            {
                 return Json($"A user with email {email} has already registered");
-            //}
+            }
             return Json(true);
         }
         #endregion
@@ -120,23 +120,20 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
             {
                 return NotFound();
             }
-            //TODO Fix Edit Action for User
-            //var user = await _userService.GetFirstAsync(u => u.Id == id);
-            //if (user == null) return NotFound();
+            
+            var user = await _userService.GetSingleNoTracking(u => u.Id == id);
+            if (user == null) return NotFound();
 
             ModelState.Remove("Email");
-            //userViewModel.EmailActiveCode = user.EmailActiveCode;
-            userViewModel.Password = _passwordHelper.HashPassword(userViewModel.Password);
-
-            //Detach User from tracking
-            //_userService.DetachEntity(user);
+            userViewModel.EmailActiveCode = user.EmailActiveCode;
+            userViewModel.Password = _passwordHelper.HashPassword(userViewModel.Password);                       
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    //var success = _userService.Edit(userViewModel);
-                    //if (success) TempData["SuccessMessage"] = "Succesfully Edited.";
+                    var success = _userService.Update(userViewModel);
+                    if (success) TempData["SuccessMessage"] = "Succesfully Edited.";
                 }
                 catch (DbUpdateConcurrencyException)
                 {

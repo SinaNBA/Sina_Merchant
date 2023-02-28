@@ -43,7 +43,7 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
 
         // GET: ProductCategoryController/Create
         public IActionResult Create()
-        {           
+        {
             var list = _CategoryService.Filter(p => p.ParentId == null);
             ViewBag.Categories = list;
 
@@ -53,14 +53,14 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         // POST: ProductCategoryController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProductCategoryViewModel productCategory)
+        public IActionResult Create(ProductCategoryViewModel productCategory)
         {
             try
             {
                 if (!ModelState.IsValid) return View(productCategory);
 
                 // add productCategory to database
-                var success = await _CategoryService.InsertAsync(productCategory);
+                var success = _CategoryService.Insert(productCategory);
                 if (success) TempData["SuccessMessage"] = "Succesfully Added.";
 
                 return RedirectToAction(nameof(Index));
@@ -99,8 +99,8 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
                 }
                 if (!ModelState.IsValid) return View(productCategory);
 
-                //var result = _CategoryService.Edit(productCategory);
-                //if (result) TempData["SuccessMessage"] = "Succesfully Edited.";
+                var result = _CategoryService.Update(productCategory);
+                if (result) TempData["SuccessMessage"] = "Succesfully Edited.";
 
                 return RedirectToAction(nameof(Index));
             }
@@ -111,37 +111,37 @@ namespace SinaMerchant.Web.Areas.Admin.Controllers
         }
 
         // GET: ProductCategoryController/Delete/5      
-        //public IActionResult? Delete(int id)
-        //{
-        //    var category = _CategoryService.GetSingle(c => c.Id == id, true);
+        public IActionResult? Delete(int id)
+        {
+            var category = (_CategoryService.GetSingleNoTracking(c => c.Id == id)).Result;
 
-        //    if (category != null)
-        //    {
-        //        var result = _CategoryService.Delete(category);
-        //        if (result)
-        //        {
-        //            return Json(new
-        //            {
-        //                status = "Success"
-        //            });
-        //        }
+            if (category != null)
+            {
+                var result = _CategoryService.Delete(category);
+                if (result)
+                {
+                    return Json(new
+                    {
+                        status = "Success"
+                    });
+                }
 
-        //    }
-        //    return Json(new
-        //    {
-        //        status = "NotFound"
-        //    });
-        //}
+            }
+            return Json(new
+            {
+                status = "NotFound"
+            });
+        }
 
-        //public IActionResult? GetParents(int parentId)
-        //{
-        //    var list = _CategoryService.Entities.Where(x => x.ParentId == parentId).ToList();
-        //    if (!list.Any())
-        //    {
-        //        return null;
-        //    }
-        //    ViewBag.ChildCategories = list;
-        //    return ViewComponent("Category");
-        //}
+        public IActionResult? GetParents(int parentId)
+        {
+            var list = _CategoryService.Filter(x => x.ParentId == parentId);
+            if (!list.Any())
+            {
+                return null;
+            }
+            ViewBag.ChildCategories = list;
+            return ViewComponent("Category");
+        }
     }
 }

@@ -1,6 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using SinaMerchant.Web.Entities;
 using SinaMerchant.Web.Repositories;
 using System.Linq.Expressions;
 
@@ -18,11 +16,7 @@ namespace SinaMerchant.Web.Services
             _mapper = mapper;
         }
 
-        //public IEnumerable<TViewModel> Entities => _mapper.Map<IEnumerable<TViewModel>>(_repository.Entities);
-
-        //public DbSet<TEntity> EntitiesSet => _repository.DbSet;
-
-        public async Task<bool> InsertAsync(TViewModel entityModel)
+        public bool Insert(TViewModel entityModel)
         {
             var entity = _mapper.Map<TEntity>(entityModel);
             return _repository.Insert(entity);
@@ -38,23 +32,21 @@ namespace SinaMerchant.Web.Services
         {
             var entity = await _repository.GetById(id);
             return _mapper.Map<TViewModel>(entity);
-        }        
-
-        public ICollection<TViewModel>? Filter(Expression<Func<TEntity, bool>> filterExpression)
-        {
-            return _mapper.Map<ICollection<TViewModel>>(_repository.Filter(filterExpression));
         }
 
-        public async Task<TViewModel> GetSingleNoTracking(Expression<Func<TEntity, bool>> filterExpression)
+        public ICollection<TViewModel>? Filter(Expression<Func<TViewModel, bool>> filterExpression)
         {
-            return _mapper.Map<TViewModel>(_repository.GetSingleNoTracking(filterExpression));
+            var entityFilterExpression = _mapper.Map<Expression<Func<TEntity, bool>>>(filterExpression);
+            var list = _repository.Filter(entityFilterExpression);
+            return _mapper.Map<ICollection<TViewModel>>(list);
         }
 
-        //public TViewModel GetSingle(Expression<Func<TEntity, bool>> filterExpression, bool disableTracking = true)
-        //{
-        //    var query = _repository.GetSingle(filterExpression, disableTracking);
-        //    return _mapper.Map<TViewModel>(query);
-        //}
+        public async Task<TViewModel> GetSingleNoTracking(Expression<Func<TViewModel, bool>> filterExpression)
+        {
+            var entityFilterExpression = _mapper.Map<Expression<Func<TEntity, bool>>>(filterExpression);
+            var entity = await _repository.GetSingleNoTracking(entityFilterExpression);
+            return _mapper.Map<TViewModel>(entity);
+        }
 
         public bool Update(TViewModel entityModel)
         {
@@ -68,10 +60,14 @@ namespace SinaMerchant.Web.Services
             return _repository.Delete(entity);
         }
 
-        public async Task<bool> DeleteById(int id)
+        public async Task<bool> DeleteById(object id)
         {
             return await _repository.DeleteById(id);
-        }       
-       
+        }
+
+        public void Save()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
