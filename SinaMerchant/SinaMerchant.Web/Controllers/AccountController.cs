@@ -13,18 +13,16 @@ namespace SinaMerchant.Web.Controllers
     public class AccountController : Controller
     {
         #region Constructor
-        private readonly IGenericService<User, RegisterViewModel> _userService;
+        private readonly IUserService<RegisterViewModel> _userService;
         private readonly IPasswordHelper _passwordHelper;
         private readonly IConfiguration _configuration;
-        private readonly IMapper _mapper;
 
-        public AccountController(IGenericService<User, RegisterViewModel> userService, IPasswordHelper passwordHelper,
-            IConfiguration configuration, IMapper mapper)
+        public AccountController(IUserService<RegisterViewModel> userService, IPasswordHelper passwordHelper,
+            IConfiguration configuration)
         {
             _userService = userService;
             _passwordHelper = passwordHelper;
             _configuration = configuration;
-            _mapper = mapper;
         }
         #endregion
 
@@ -37,7 +35,7 @@ namespace SinaMerchant.Web.Controllers
 
         [HttpPost("register")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register([Bind("Email, Password,ConfirmPassword")] RegisterViewModel register)
+        public IActionResult Register([Bind("Email, Password,ConfirmPassword")] RegisterViewModel register)
         {
             if (!ModelState.IsValid)
             {
@@ -49,7 +47,7 @@ namespace SinaMerchant.Web.Controllers
             register.Password = _passwordHelper.HashPassword(register.Password);
             register.EmailActiveCode = Guid.NewGuid().ToString("N");
             register.RegisterDate = DateTime.Now;
-            await _userService.InsertAsync(register);
+            _userService.Insert(register);
 
 
             // send email active code
@@ -83,14 +81,14 @@ namespace SinaMerchant.Web.Controllers
         }
 
         [HttpGet("activate-account/{emailActiveCode}")]
-        public IActionResult ActivateAccount(string emailActiveCode)
+        public async Task<IActionResult> ActivateAccount(string emailActiveCode)
         {
-            var user = _userService.GetSingle(u => u.EmailActiveCode == emailActiveCode, true);
+            var user = await _userService.GetSingleNoTracking(u => u.EmailActiveCode == emailActiveCode);
             if (user != null && !user.IsActive)
             {
                 user.IsActive = true;
                 user.EmailActiveCode = Guid.NewGuid().ToString("N");
-                var success = _userService.Edit(user);
+                var success = _userService.Update(user);
                 if (success)
                 {
                     TempData["SuccessMessage"] = "Your account has been successfully activated!";
@@ -112,7 +110,10 @@ namespace SinaMerchant.Web.Controllers
                 return Redirect("/");
             }
 
-            ViewBag.referer = ReturnUrl;
+            if (ReturnUrl != null)
+            {
+                ViewBag.referer = ReturnUrl;
+            }
 
             return View();
         }
@@ -124,7 +125,7 @@ namespace SinaMerchant.Web.Controllers
             {
                 login.Password = _passwordHelper.HashPassword(login.Password);
                 login.Email = login.Email.ToLower().Trim();
-                var user = await _userService.GetSingleAsync(user => user.Email == login.Email && user.Password == login.Password);
+                var user = await _userService.GetSingleNoTracking(user => user.Email == login.Email && user.Password == login.Password);
                 if (user != null)
                 {
                     if (user.IsActive)
@@ -133,10 +134,10 @@ namespace SinaMerchant.Web.Controllers
 
                         // set user claims
                         var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Email),
-            };
+                        {
+                            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                            new Claim(ClaimTypes.Name, user.Email),
+                        };
                         // Identity
                         var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -156,7 +157,7 @@ namespace SinaMerchant.Web.Controllers
                             return Redirect(referer);
                         }
 
-                        if (user.IsAdmin) return RedirectToAction("Index", "Home", new { area = "Admin" });
+                        //if (user.IsAdmin) return RedirectToAction("Index", "Home", new { area = "Admin" });
 
                         return Redirect("/");
                     }
@@ -187,7 +188,7 @@ namespace SinaMerchant.Web.Controllers
             {
 
 
-                var user = await _userService.Entities.AsQueryable().SingleOrDefaultAsync(u => u.Email == forgotPass.Email.Trim().ToLower());
+                var user = await _userService.GetSingleNoTracking(u => u.Email == forgotPass.Email.Trim().ToLower());
                 if (user != null)
                 {
                     var domainName = _configuration.GetValue<string>("DomainName");
@@ -215,7 +216,7 @@ namespace SinaMerchant.Web.Controllers
         [HttpGet("reset-pass/{emailActiveCode}")]
         public async Task<IActionResult> ResetPassword(string emailActiveCode)
         {
-            var user = await _userService.Entities.AsQueryable().SingleOrDefaultAsync(u => u.EmailActiveCode == emailActiveCode);
+            var user = await _userService.GetSingleNoTracking(u => u.EmailActiveCode == emailActiveCode);
 
             if (user == null) return NotFound();
 
@@ -227,17 +228,19 @@ namespace SinaMerchant.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                //var user = _userService.Entities.AsQueryable().SingleOrDefault(u => u.EmailActiveCode == emailActiveCode);
-                var user = _userService.GetSingle(u => u.EmailActiveCode == emailActiveCode, true);
+                var user = await _userService.GetSingleNoTracking(u => u.EmailActiveCode == emailActiveCode);
                 if (user == null) return NotFound();
 
                 user.Password = _passwordHelper.HashPassword(resetPass.Password);
                 user.EmailActiveCode = Guid.NewGuid().ToString("N");
                 user.IsActive = true;
-                //var userViewModel = _mapper.Map<RegisterViewModel>(user);
-                var success = _userService.Edit(user);
-                TempData["SuccessMessage"] = "Reset successfully.";
-                if (success) return RedirectToAction("Login");
+
+                var success = _userService.Update(user);
+                if (success)
+                {
+                    TempData["SuccessMessage"] = "Reset successfully.";
+                    return RedirectToAction("Login");
+                }
 
             }
             return View();

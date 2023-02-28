@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SinaMerchant.Web.Data.Context;
+using SinaMerchant.Web.Entities;
 using System.Linq.Expressions;
 
 namespace SinaMerchant.Web.Repositories
@@ -15,13 +16,9 @@ namespace SinaMerchant.Web.Repositories
             _entities = _context.Set<TEntity>();
         }
 
-        public IQueryable<TEntity> Entities => _entities;
-
-        public DbSet<TEntity> DbSet => _entities;
-
-        public async Task<bool> InsertAsync(TEntity entity)
+        public bool Insert(TEntity entity)
         {
-            await _entities.AddAsync(entity);
+            _entities.AddAsync(entity);
             Save();
             return true;
         }
@@ -43,46 +40,43 @@ namespace SinaMerchant.Web.Repositories
 
         }
 
-        public async Task<TEntity> GetFirstAsync(Expression<Func<TEntity, bool>> filterExpression)
+        public async Task<TEntity> GetSingleNoTracking(Expression<Func<TEntity, bool>> filterExpression)
         {
-            return await _entities.FirstOrDefaultAsync(filterExpression);
+            return await _entities.Where(filterExpression).AsNoTracking().SingleOrDefaultAsync();
         }
 
-        public async Task<TEntity> GetSingleAsync(Expression<Func<TEntity, bool>> filterExpression)
+        public bool Update(TEntity entity)
         {
-            return await _entities.SingleOrDefaultAsync(filterExpression);
-        }
+            try
+            {
+                _context.Attach(entity);
 
-        public TEntity GetSingle(Expression<Func<TEntity, bool>> filterExpression, bool disableTracking = true)
-        {
-            IQueryable<TEntity> query = _entities;
-            if (disableTracking) query = query.AsNoTracking();
-            return query.SingleOrDefault(filterExpression);
-        }
+                _context.Entry(entity).State = EntityState.Modified;
+                Save();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
 
-        public async Task<bool> IsExist(Expression<Func<TEntity, bool>> filterExpression)
-        {
-            return await _entities.AnyAsync(filterExpression);
-        }
-
-        public bool Edit(TEntity entity)
-        {
-            //if (_context.Entry(entity).State == EntityState.Added) _context.Attach(entity);
-
-            _context.Update(entity);
-            Save();
-            return true;
         }
 
         public bool Delete(TEntity entity)
         {
-            //if (_context.Entry(entity).State == EntityState.Detached)
-            //{
-            //    _context.Attach(entity);
-            //}
-            _entities.Remove(entity);
-            Save();
-            return true;
+            try
+            {
+                _entities.Remove(entity);
+                Save();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                return false;
+            }
+
         }
 
         public async Task<bool> DeleteById(object id)
@@ -108,6 +102,5 @@ namespace SinaMerchant.Web.Repositories
         {
             _context.Dispose();
         }
-
     }
 }

@@ -1,9 +1,8 @@
 ﻿namespace SinaMerchant.Web.Entities
 {
     // site's user or customer's table
-    public class User
+    public class User : EntityBase
     {
-        public int Id { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
         public string? FName { get; set; }

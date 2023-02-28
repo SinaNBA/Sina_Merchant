@@ -16,9 +16,13 @@
                     <li class="nav-item">
                         <a class="nav-link text-white-50" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-white-50" asp-area="Admin" asp-controller="Home" asp-action="Index">Admin</a>
-                    </li>
+                    @if (ViewBag.HasPermission)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-white-50" asp-area="Admin" asp-controller="Home" asp-action="Index">Admin</a>
+                        </li>
+                    }
+
 
 
                 </ul>

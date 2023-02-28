@@ -1,8 +1,7 @@
 ﻿namespace SinaMerchant.Web.Entities
 {
-    public class Role
+    public class Role: EntityBase
     {
-        public int Id { get; set; }
         public string Title { get; set; }
 
         #region Relations

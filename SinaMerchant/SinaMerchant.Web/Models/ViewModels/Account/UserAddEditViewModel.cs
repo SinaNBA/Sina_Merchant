@@ -11,8 +11,9 @@ namespace SinaMerchant.Web.Models.ViewModels
         [Required]
         [DataType(DataType.EmailAddress)]
         [MaxLength(50)]
-        [Remote("VerifyEmail","User","Admin")]
+        [Remote("VerifyEmail","User","Admin",AdditionalFields =nameof(PageMode))]
         public string Email { get; set; }
+        public string PageMode { get; set; }
         [Required]
         [DataType(DataType.Password)]
         [MaxLength(200)]

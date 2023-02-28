@@ -1,7 +1,9 @@
+using AutoMapper.Extensions.ExpressionMapping;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using SinaMerchant.Web.Data.Context;
 using SinaMerchant.Web.Repositories;
+using SinaMerchant.Web.Repositories.Interfaces;
 using SinaMerchant.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,10 +21,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Add Repos to the DI container
 #region IoC
-builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(cfg => { cfg.AddExpressionMapping(); }, typeof(Program));
+builder.Services.AddScoped<IPasswordHelper, MD5PasswordHelper>();
 builder.Services.AddScoped(typeof(IRepository<>), typeof(ShopRepository<>));
 builder.Services.AddScoped(typeof(IGenericService<,>), typeof(GenericService<,>));
-builder.Services.AddScoped<IPasswordHelper, MD5PasswordHelper>();
+builder.Services.AddScoped(typeof(IUserService<>), typeof(UserService<>));
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 #endregion
 
 #region Authentication

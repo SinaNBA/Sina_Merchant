@@ -1,8 +1,7 @@
 ﻿namespace SinaMerchant.Web.Entities
 {
-    public class UserRole
+    public class UserRole : EntityBase
     {
-        public int Id { get; set; }
         public int UserId { get; set; }
         public int RoleId { get; set; }
 
