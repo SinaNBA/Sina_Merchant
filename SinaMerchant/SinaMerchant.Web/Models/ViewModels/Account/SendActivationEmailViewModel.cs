@@ -1,6 +1,6 @@
 ﻿namespace SinaMerchant.Web.Models.ViewModels
 {
-    public class SendEmailViewModel
+    public class SendActivationEmailViewModel
     {
         public string Email { get; set; }
         public string EmailActiveCode { get; set; }

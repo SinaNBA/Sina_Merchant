@@ -53,16 +53,7 @@ namespace SinaMerchant.Web.Controllers
 
 
             // send email active code
-            var domainName = _configuration.GetValue<string>("DomainName");
-            string message = $"We created an account for you. Please confirm your email address and get ready to start shopping. <a class=\"btn btn-primary\" role=\"button\" href=\"{domainName}/activate-account/{register.EmailActiveCode}\">ConfirmMyEmail</a>";
-            var sendMail = new SendEmailViewModel()
-            {
-                Email = register.Email,
-                EmailActiveCode = register.EmailActiveCode,
-                Subject = "Confirm your email",
-                Message = message
-            };
-            return RedirectToAction("SendEmail", sendMail);
+            return RedirectToAction("SendActivationEmail", new { register.Email, register.EmailActiveCode });
         }
 
         // check user is exists or not, through remote attribute in RegisterViewModel
@@ -76,10 +67,21 @@ namespace SinaMerchant.Web.Controllers
         }
 
         // send email active code  
-        public IActionResult SendEmail(SendEmailViewModel sendEmail)
+        public IActionResult SendActivationEmail(string email, string emailActiveCode)
         {
-            EmailSender.SendEmail(sendEmail.Email, sendEmail.Subject, sendEmail.Message);
-            return View(sendEmail);
+            var domainName = _configuration.GetValue<string>("DomainName");
+            string message = $"We created an account for you. Please confirm your email address and get ready to start shopping. <a class=\"btn btn-primary\" role=\"button\" href=\"{domainName}/activate-account/{emailActiveCode}\">ConfirmMyEmail</a>";
+
+            var sendActivationMail = new SendActivationEmailViewModel()
+            {
+                Email = email,
+                EmailActiveCode = emailActiveCode,
+                Subject = "Confirm your email",
+                Message = message
+            };
+
+            EmailSender.SendEmail(sendActivationMail.Email, sendActivationMail.Subject, sendActivationMail.Message);
+            return View(sendActivationMail);
         }
 
         [HttpGet("activate-account/{emailActiveCode}")]
@@ -192,7 +194,7 @@ namespace SinaMerchant.Web.Controllers
                 {
                     var domainName = _configuration.GetValue<string>("DomainName");
                     string message = $"Hi {user.Email}. Forgot your password? No worries, we’ve got you covered. Click the link to reset your password. <a class=\"btn btn-primary\" role=\"button\" href=\"{domainName}/reset-pass/{user.EmailActiveCode}\">ResetPassword</a>";
-                    var sendEmail = new SendEmailViewModel()
+                    var sendEmail = new SendActivationEmailViewModel()
                     {
                         Email = user.Email,
                         EmailActiveCode = user.EmailActiveCode,
